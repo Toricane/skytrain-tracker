@@ -1,0 +1,117 @@
+stop_name,stop_lat,stop_lon,line
+Richmond-Brighouse Station @ Platform 1,49.168092,-123.136174,Canada Line
+Broadway-City Hall Station @ Platform 1,49.262725,-123.114753,Canada Line
+Olympic Village Station @ Platform 1,49.266557,-123.115527,Canada Line
+Yaletown-Roundhouse Station @ Platform 1,49.274508,-123.122015,Canada Line
+Vancouver City Centre Station @ Platform 1,49.282352,-123.118143,Canada Line
+Waterfront Station @ Platform 5,49.285093,-123.114139,Canada Line
+Lansdowne Station @ Platform 1,49.174766,-123.136322,Canada Line
+Aberdeen Station @ Platform 1,49.183991,-123.13622,Canada Line
+Capstan Station @ Platform 1,49.189131,-123.131869,Canada Line
+Bridgeport Station @ Platform 1,49.195514,-123.126006,Canada Line
+Marine Drive Station @ Platform 1,49.209663,-123.116921,Canada Line
+Langara-49th Avenue Station @ Platform 1,49.225709,-123.116289,Canada Line
+Oakridge-41st Avenue Station @ Platform 1,49.233731,-123.116176,Canada Line
+King Edward Station @ Platform 1,49.249172,-123.115228,Canada Line
+YVR-Airport Station @ Platform 1,49.194152,-123.178254,Canada Line
+Sea Island Centre Station @ Platform 1,49.19293,-123.157884,Canada Line
+Templeton Station @ Platform 1,49.196655,-123.146307,Canada Line
+Waterfront Station @ Platform 4,49.285139,-123.114206,Canada Line
+Bridgeport Station @ Platform 2,49.195558,-123.126076,Canada Line
+Templeton Station @ Platform 2,49.196715,-123.146335,Canada Line
+Sea Island Centre Station @ Platform 2,49.193053,-123.157851,Canada Line
+YVR-Airport Station @ Canada Line,49.194189,-123.178251,Canada Line
+Vancouver City Centre Station @ Platform 2,49.282462,-123.118283,Canada Line
+Yaletown-Roundhouse Station @ Platform 2,49.274467,-123.122124,Canada Line
+Olympic Village Station @ Platform 2,49.266616,-123.115218,Canada Line
+Broadway-City Hall Station @ Platform 2,49.262684,-123.114856,Canada Line
+King Edward Station @ Platform 2,49.249186,-123.115716,Canada Line
+Oakridge-41st Avenue Station @ Platform 2,49.233747,-123.116422,Canada Line
+Langara-49th Avenue Station @ Platform 2,49.225743,-123.116752,Canada Line
+Marine Drive Station @ Platform 2,49.209661,-123.117078,Canada Line
+Capstan Station @ Platform 2,49.189163,-123.131956,Canada Line
+Aberdeen Station @ Platform 2,49.184,-123.136398,Canada Line
+Lansdowne Station @ Platform 2,49.174762,-123.136507,Canada Line
+Richmond-Brighouse Station @ Canada Line,49.168092,-123.136247,Canada Line
+Coquitlam Central Station @ Platform 2,49.274738,-122.800643,Millennium Line
+Lincoln Station @ Platform 2,49.28041,-122.793805,Millennium Line
+Lafarge Lake-Douglas Station @ Platform 2,49.285693,-122.791435,Millennium Line
+VCC-Clark Station @ Platform 2,49.265799,-123.079054,Millennium Line
+Production Way-University Station @ Platform 2,49.253364,-122.918218,Millennium Line
+Lougheed Town Centre Station @ Platform 1,49.248484,-122.896952,Millennium Line
+Burquitlam Station @ Platform 2,49.261375,-122.889784,Millennium Line
+Moody Centre Station @ Platform 2,49.277941,-122.845608,Millennium Line
+Inlet Centre Station @ Platform 2,49.277118,-122.828183,Millennium Line
+Commercial-Broadway Station @ Platform 2,49.262912,-123.068491,Millennium Line
+Renfrew Station @ Platform 2,49.258877,-123.045348,Millennium Line
+Rupert Station @ Platform 2,49.260733,-123.032821,Millennium Line
+Gilmore Station @ Platform 2,49.264931,-123.013498,Millennium Line
+Brentwood Town Centre Station @ Platform 2,49.266352,-123.001813,Millennium Line
+Holdom Station @ Platform 2,49.264705,-122.982158,Millennium Line
+Sperling-Burnaby Lake Station @ Platform 2,49.259154,-122.963991,Millennium Line
+Lake City Way Station @ Platform 2,49.254609,-122.939183,Millennium Line
+Lougheed Town Centre Station @ Platform 3,49.248611,-122.896818,Millennium Line
+Commercial-Broadway Station @ Platform 1,49.26298,-123.068426,Millennium Line
+VCC-Clark Station @ Platform 1,49.265873,-123.079049,Millennium Line
+Production Way-University Station @ Platform 1,49.253465,-122.918191,Millennium Line
+Lake City Way Station @ Platform 1,49.254654,-122.939183,Millennium Line
+Sperling-Burnaby Lake Station @ Platform 1,49.259213,-122.963982,Millennium Line
+Holdom Station @ Platform 1,49.264753,-122.982149,Millennium Line
+Brentwood Town Centre Station @ Platform 1,49.266431,-123.001813,Millennium Line
+Gilmore Station @ Platform 1,49.265002,-123.013571,Millennium Line
+Rupert Station @ Platform 1,49.260815,-123.032869,Millennium Line
+Renfrew Station @ Platform 1,49.258942,-123.045374,Millennium Line
+Lafarge Lake-Douglas Station @ Platform 1,49.285743,-122.791623,Millennium Line
+Lincoln Station @ Platform 1,49.280417,-122.794097,Millennium Line
+Coquitlam Central Station @ Platform 1,49.274919,-122.800551,Millennium Line
+Inlet Centre Station @ Platform 1,49.277294,-122.828164,Millennium Line
+Moody Centre Station @ Platform 1,49.27798,-122.845609,Millennium Line
+Burquitlam Station @ Platform 1,49.261421,-122.889853,Millennium Line
+Waterfront Station @ Platform 2,49.285907,-123.111578,Expo Line
+Patterson Station @ Platform 2,49.229712,-123.012678,Expo Line
+Metrotown Station @ Platform 2,49.225781,-123.00394,Expo Line
+Royal Oak Station @ Platform 2,49.220013,-122.988475,Expo Line
+Edmonds Station @ Platform 2,49.211909,-122.959156,Expo Line
+22nd Street Station @ Platform 2,49.200021,-122.94894,Expo Line
+New Westminster Station @ Platform 2,49.201406,-122.912573,Expo Line
+Columbia Station @ Platform 2,49.204778,-122.906118,Expo Line
+Scott Road Station @ Platform 2,49.204383,-122.874171,Expo Line
+Gateway Station @ Platform 2,49.198946,-122.850673,Expo Line
+Surrey Central Station @ Platform 2,49.189549,-122.847914,Expo Line
+Burrard Station @ Platform 2,49.285634,-123.119515,Expo Line
+King George Station @ Platform 2,49.182755,-122.844744,Expo Line
+Granville Station @ Platform 2,49.283136,-123.115744,Expo Line
+Stadium-Chinatown Station @ Platform 2,49.279178,-123.109213,Expo Line
+Main Street-Science World Station @ Platform 2,49.273099,-123.100399,Expo Line
+Commercial-Broadway Station @ Platform 4,49.262317,-123.069179,Expo Line
+Nanaimo Station @ Platform 2,49.248283,-123.055904,Expo Line
+29th Avenue Station @ Platform 2,49.244236,-123.046136,Expo Line
+Joyce-Collingwood Station @ Platform 2,49.238353,-123.031827,Expo Line
+Sapperton Station @ Platform 2,49.224621,-122.889311,Expo Line
+Braid Station @ Platform 2,49.233236,-122.882718,Expo Line
+Lougheed Town Centre Station @ Platform 2,49.248549,-122.896879,Expo Line
+Production Way-University Station @ Platform 1,49.253465,-122.918191,Expo Line
+Burrard Station @ Platform 1,49.28558,-123.119598,Expo Line
+Waterfront Station @ Platform 1,49.285962,-123.111516,Expo Line
+Granville Station @ Platform 1,49.283193,-123.115674,Expo Line
+Main Street-Science World Station @ Platform 1,49.273172,-123.10035,Expo Line
+Stadium-Chinatown Station @ Platform 1,49.279271,-123.109109,Expo Line
+Commercial-Broadway Station @ Platform 3,49.262311,-123.069077,Expo Line
+Edmonds Station @ Platform 1,49.211945,-122.95904,Expo Line
+Royal Oak Station @ Platform 1,49.22011,-122.98844,Expo Line
+Metrotown Station @ Platform 1,49.225852,-123.003876,Expo Line
+Patterson Station @ Platform 1,49.229798,-123.012613,Expo Line
+Joyce-Collingwood Station @ Platform 1,49.23843,-123.031759,Expo Line
+29th Avenue Station @ Platform 1,49.24431,-123.04608,Expo Line
+Nanaimo Station @ Platform 1,49.248334,-123.055868,Expo Line
+Surrey Central Station @ Platform 1,49.189561,-122.847796,Expo Line
+Gateway Station @ Platform 1,49.198955,-122.850542,Expo Line
+Scott Road Station @ Platform 1,49.204448,-122.874185,Expo Line
+Columbia Station @ Platform 1,49.204859,-122.906187,Expo Line
+New Westminster Station @ Platform 1,49.201459,-122.912629,Expo Line
+22nd Street Station @ Platform 1,49.200083,-122.948971,Expo Line
+King George Station @ Platform 1,49.182812,-122.844691,Expo Line
+Production Way-University Station @ Platform 2,49.253364,-122.918218,Expo Line
+Lougheed Town Centre Station @ Platform 1,49.248484,-122.896952,Expo Line
+Braid Station @ Platform 1,49.233236,-122.882831,Expo Line
+Sapperton Station @ Platform 1,49.2247,-122.889424,Expo Line

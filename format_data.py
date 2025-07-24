@@ -1,60 +1,131 @@
+import json
+from datetime import datetime
+
 import pandas as pd
 
+
+# --- Step 1: Determine active service_ids for today ---
+def get_active_services():
+    today = datetime.now()
+    today_date_str = today.strftime("%Y%m%d")
+    today_day_name = today.strftime("%A").lower()
+
+    try:
+        calendar_df = pd.read_csv("google_transit/calendar.txt")
+        calendar_dates_df = pd.read_csv("google_transit/calendar_dates.txt")
+    except FileNotFoundError:
+        print(
+            "Error: calendar.txt or calendar_dates.txt not found. Cannot determine active services."
+        )
+        return set()
+
+    # Filter by day of the week and date range
+    active_mask = (
+        (calendar_df[today_day_name] == 1)
+        & (calendar_df["start_date"] <= int(today_date_str))
+        & (calendar_df["end_date"] >= int(today_date_str))
+    )
+
+    active_service_ids = set(calendar_df[active_mask]["service_id"])
+
+    # Handle exceptions from calendar_dates.txt
+    today_date_int = int(today_date_str)
+
+    # Add services for today
+    added_services = set(
+        calendar_dates_df[
+            (calendar_dates_df["date"] == today_date_int)
+            & (calendar_dates_df["exception_type"] == 1)
+        ]["service_id"]
+    )
+    active_service_ids.update(added_services)
+
+    # Remove services for today
+    removed_services = set(
+        calendar_dates_df[
+            (calendar_dates_df["date"] == today_date_int)
+            & (calendar_dates_df["exception_type"] == 2)
+        ]["service_id"]
+    )
+    active_service_ids.difference_update(removed_services)
+
+    return active_service_ids
+
+
+# --- Main script ---
 trips = pd.read_csv("google_transit/trips.txt")
 stop_times = pd.read_csv("google_transit/stop_times.txt")
 stops = pd.read_csv("google_transit/stops.txt")
 
-# Filter trips for skytrains (Expo, Millennium, Canada Line)
-skytrain_trips = trips[trips["trip_headsign"].str.contains(" Line", na=False)]
+# Filter trips by active services for today
+active_services = get_active_services()
+if not active_services:
+    print("Warning: No active services found for today. Output files will be empty.")
+trips = trips[trips["service_id"].isin(active_services)]
 
-# Get all unique trip_ids for skytrain trips
-skytrain_trip_ids = skytrain_trips["trip_id"].unique()
+# Filter for Skytrain trips
+skytrain_trips = trips[trips["trip_headsign"].str.contains(" Line", na=False)].copy()
 
-# Get all stop_times for skytrain trips
-skytrain_stop_times = stop_times[stop_times["trip_id"].isin(skytrain_trip_ids)]
+# Extract line name from trip_headsign
+skytrain_trips["line"] = skytrain_trips["trip_headsign"].str.extract(r"(\w+\sLine)")[0]
 
-# Get all unique stop_ids for skytrain stations from the stop_times
-skytrain_station_ids = skytrain_stop_times["stop_id"].unique()
+# Merge with stop times and then with stops to get a complete dataframe
+schedule_with_stops = pd.merge(skytrain_trips, stop_times, on="trip_id")
+all_data = pd.merge(schedule_with_stops, stops, on="stop_id")
 
-# Filter stops to only get skytrain stations
-skytrain_stations = stops[stops["stop_id"].isin(skytrain_station_ids)]
+# --- Create station data for the map ---
+station_map_data = all_data[
+    ["stop_name", "stop_lat", "stop_lon", "line"]
+].drop_duplicates()
+station_map_data.to_csv("stations_for_map.csv", index=False)
+print("Station data for map saved to stations_for_map.csv")
 
-# For the final goal, we need to combine the information.
-# Let's merge the dataframes to get all the data in one place.
 
-# Merge stop times with trip information
-skytrain_data = pd.merge(skytrain_stop_times, skytrain_trips, on="trip_id")
+# Function to convert time string to seconds
+def time_to_seconds(time_str):
+    try:
+        h, m, s = map(int, time_str.split(":"))
+        if h >= 24:
+            h -= 24
+        return h * 3600 + m * 60 + s
+    except:
+        return None
 
-# Merge with station information
-all_skytrain_data = pd.merge(skytrain_data, skytrain_stations, on="stop_id")
 
-# Extract the line name from trip_headsign
-all_skytrain_data["line"] = all_skytrain_data["trip_headsign"].str.extract(
-    r"(\w+\sLine)"
-)[0]
+# Sort data by trip and time
+sorted_data = all_data.sort_values(by=["trip_id", "arrival_time"])
 
-# Select and reorder columns for clarity
-final_data = all_skytrain_data[
-    [
-        "stop_name",
-        "line",
-        "trip_headsign",  # direction
-        "arrival_time",
-        "departure_time",
-        "stop_lat",
-        "stop_lon",
-    ]
-]
+# --- Create train journeys JSON ---
+journeys = {}
+for trip_id, trip_data in sorted_data.groupby("trip_id"):
+    line_name = trip_data["line"].iloc[0]
+    journey_stops = []
+    for _, row in trip_data.iterrows():
+        arrival_seconds = time_to_seconds(row["arrival_time"])
+        if arrival_seconds is not None:
+            journey_stops.append(
+                {"stop_name": row["stop_name"], "arrival_time": arrival_seconds}
+            )
+    if journey_stops:
+        journeys[trip_id] = {"line": line_name, "stops": journey_stops}
 
-# Save the dataframes to CSV files
-# For stations, we only want unique stations, so we drop duplicates based on stop_name
-# and keep the essential columns.
-skytrain_stations_info = skytrain_stations[
-    ["stop_name", "stop_lat", "stop_lon"]
-].drop_duplicates(subset=["stop_name"])
-skytrain_stations_info.to_csv("skytrain_stations.csv", index=False)
+with open("train_journeys.json", "w") as f:
+    json.dump(journeys, f, indent=2)
+print("Train journeys data saved to train_journeys.json")
 
-final_data.to_csv("skytrain_schedule.csv", index=False)
+# --- Create station schedules JSON ---
+station_schedules = {}
+for stop_name, stop_data in sorted_data.groupby("stop_name"):
+    arrivals = []
+    for _, row in stop_data.iterrows():
+        arrival_seconds = time_to_seconds(row["arrival_time"])
+        if arrival_seconds is not None:
+            arrivals.append(
+                {"time": arrival_seconds, "direction": row["trip_headsign"]}
+            )
+    arrivals.sort(key=lambda x: x["time"])
+    station_schedules[stop_name] = arrivals
 
-print("Skytrain station data saved to skytrain_stations.csv")
-print("Full skytrain schedule data saved to skytrain_schedule.csv")
+with open("station_schedules.json", "w") as f:
+    json.dump(station_schedules, f, indent=2)
+print("Station schedules data saved to station_schedules.json")
