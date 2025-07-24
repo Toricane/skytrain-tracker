@@ -85,7 +85,7 @@ async function plotStations() {
         if (Object.keys(stationMarkers).length > 0) {
             const allMarkers = Object.values(stationMarkers);
             const featureGroup = L.featureGroup(allMarkers);
-            map.fitBounds(featureGroup.getBounds().pad(0.1)); // .pad(0.1) adds 10% padding
+            map.fitBounds(featureGroup.getBounds()); // .pad(0.1) adds 10% padding
         }
 
         // Initial update of marker positions
@@ -116,7 +116,10 @@ function addMarker(stopName, lat, lon, line) {
         marker.options.originalColor = color;
 
         // Bind a popup that gets its content from a function
-        marker.bindPopup(() => getPopupContent(stopName));
+        marker.bindPopup(() => getPopupContent(stopName), {
+            minWidth: 280,
+            maxWidth: 320,
+        });
 
         // When a popup is opened, store its info
         marker.on("popupopen", () => {

@@ -9,7 +9,3 @@ body {
     height: 80vh;
     width: 80vw;
 }
-
-.leaflet-popup-content-wrapper {
-    min-width: 280px;
-}
