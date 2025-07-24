@@ -1,0 +1,494 @@
+﻿route_name,direction_id,direction_name,direction_do
+2,0,Burrard Station,0
+2,1,Macdonald,1
+3,0,Waterfront Station,0
+3,1,Main-Marine Drive Station,1
+4,0,Downtown/Powell,0
+4,1,UBC,1
+5,0,Downtown,0
+5,1,Robson,1
+6,0,Downtown,0
+6,1,Davie,1
+7,0,Nanaimo Station,0
+7,1,Dunbar,1
+8,0,Fraser,0
+8,1,Waterfront Station,1
+9,0,Commercial-Broadway Station/Boundary,0
+9,1,Alma,1
+10,0,Waterfront Station,0
+10,1,Granville,1
+14,0,Downtown/Hastings,0
+14,1,UBC,1
+15,0,Olympic Village Station,0
+15,1,Cambie,1
+16,0,29th Ave Station,0
+16,1,Arbutus,1
+17,0,Downtown,0
+17,1,Oak,1
+19,0,Metrotown Station,0
+19,1,Stanley Park,1
+20,0,Downtown,0
+20,1,Victoria,1
+22,0,Knight,0
+22,1,Downtown,1
+23,0,Main Street Station,0
+23,1,English Bay,1
+25,0,Brentwood Station,0
+25,1,UBC,1
+26,0,Joyce Station,0
+26,1,29th Ave Station,1
+27,0,Kootenay Loop,0
+27,1,Joyce Station,1
+28,0,Phibbs Exchange,0
+28,1,Joyce Station,1
+29,0,29th Ave Station,0
+29,1,Elliott,1
+31,0,Metrotown Station,0
+31,1,River District,1
+32,0,Downtown,0
+32,1,Dunbar,1
+33,0,29th Ave Station,0
+33,1,UBC,1
+41,0,Joyce Station,0
+41,1,Crown,1
+42,0,Alma,0
+42,1,Spanish Banks,1
+44,0,Downtown,0
+44,1,UBC,1
+49,0,Metrotown Station,0
+49,1,UBC,1
+50,0,Waterfront Station,0
+50,1,False Creek/Granville Island,1
+68,0,UBC Exchange,0
+68,1,Wesbrook Village,1
+80,0,River District,0
+80,1,Marine Drive Station,1
+84,0,VCC-Clark Station,0
+84,1,UBC,1
+99,0,Commercial-Broadway Station B-Line,0
+99,1,UBC B-Line,1
+100,0,22nd St Station,0
+100,1,Marpole,1
+101,0,Lougheed Station,0
+101,1,22nd St Station,1
+102,0,Victoria Hill,0
+102,1,New Westminster Station,1
+103,0,New Westminster Station,0
+103,1,Quayside,1
+104,0,22nd St Station,0
+104,1,Annacis Island,1
+105,0,Uptown,0
+105,1,New Westminster Station,1
+106,0,New Westminster Station,0
+106,1,Edmonds Station,1
+109,0,Lougheed Station,0
+109,1,New Westminster Station,1
+110,0,Lougheed Station,0
+110,1,Metrotown Station,1
+112,0,New Westminster Station,0
+112,1,Edmonds Station,1
+116,0,Edmonds Station,0
+116,1,Metrotown Station,1
+119,0,Edmonds Station,0
+119,1,Metrotown Station,1
+123,0,New Westminster Station,0
+123,1,Brentwood Station,1
+128,0,Braid Station,0
+128,1,22nd St Station,1
+129,0,Holdom Station,0
+129,1,Patterson Station,1
+130,0,Kootenay Loop/Phibbs Exchange,0
+130,1,Metrotown Station,1
+131,0,Hastings at Gilmore,0
+131,1,Kootenay Loop,1
+132,0,Capitol Hill,0
+132,1,Hastings at Gilmore,1
+133,0,Edmonds Station,0
+133,1,Holdom Station,1
+134,0,Lake City Station,0
+134,1,Brentwood Station,1
+136,0,Lougheed Station,0
+136,1,Brentwood Station,1
+143,0,Burquitlam Station,0
+143,1,SFU,1
+144,0,SFU,0
+144,1,Metrotown Station,1
+145,0,SFU,0
+145,1,Production Station,1
+146,0,Metrotown Station,0
+146,1,Suncrest,1
+147,0,Edmonds Station,0
+147,1,Metrotown Station,1
+148,0,Edmonds Station,0
+148,1,Royal Oak Station,1
+150,0,White Pine Beach,0
+150,1,Coquitlam Central Station,1
+151,0,Coquitlam Central Station,0
+151,1,Burquitlam Station,1
+152,0,Coquitlam Central Station,0
+152,1,Lougheed Station,1
+153,0,Coquitlam Central Station,0
+153,1,Braid Station,1
+155,0,Braid Station,0
+155,1,22nd Street Station,1
+156,0,Braid Station,0
+156,1,Lougheed Station,1
+157,0,Burquitlam Station,0
+157,1,Lougheed Station,1
+159,0,Coquitlam Central Station,0
+159,1,Braid Station,1
+160,0,Port Coquitlam Station,0
+160,1,Kootenay Loop,1
+169,0,Coquitlam Central Station,0
+169,1,Braid Station,1
+170,0,Port Coquitlam Station,0
+170,1,Port Coquitlam South,1
+171,0,Fremont,0
+171,1,Coquitlam Central Station,1
+172,0,Riverside,0
+172,1,Coquitlam Central Station,1
+173,0,Cedar,0
+173,1,Coquitlam Central Station,1
+174,0,Rocklin,0
+174,1,Coquitlam Central Station,1
+175,0,Meridian,0
+175,1,Coquitlam Central Station,1
+179,0,Buntzen Lake,0
+179,1,Coquitlam Central Station,1
+180,0,Moody Centre Station,0
+180,1,Lougheed Station,1
+181,0,Ioco,0
+181,1,Moody Centre Station,1
+182,0,Belcarra,0
+182,1,Moody Centre Station,1
+183,0,Coquitlam Central Station,0
+183,1,Moody Centre Station,1
+184,0,Noons Creek,0
+184,1,Moody Centre Station,1
+185,0,Lansdowne,0
+185,1,Coquitlam Central Station,1
+186,0,Hampton Park,0
+186,1,Coquitlam Central Station,1
+187,0,Parkway,0
+187,1,Coquitlam Central Station,1
+188,0,Port Coquitlam Station,0
+188,1,Coquitlam Central Station,1
+189,0,Lafarge,0
+189,1,Coquitlam Central Station,1
+191,0,Princeton,0
+191,1,Coquitlam Central Station,1
+209,0,Upper Lynn Valley,0
+209,1,Burrard Station,1
+210,0,Upper Lynn Valley,0
+210,1,Burrard Station,1
+211,0,Seymour,0
+211,1,Phibbs Exchange/Burrard Station,1
+212,0,Deep Cove,0
+212,1,Phibbs Exchange,1
+214,0,Blueridge,0
+214,1,Phibbs Exchange/Burrard Station,1
+215,0,Indian River,0
+215,1,Phibbs Exchange,1
+222,0,Phibbs Exchange,0
+222,1,Metrotown Station,1
+226,0,Lynn Canyon Park,0
+226,1,Lynn Valley,1
+227,0,Lynn Valley Centre Via Lynn Canyon Park,0
+227,1,Phibbs Exchange,1
+228,0,Lynn Valley,0
+228,1,Lonsdale Quay,1
+229,0,Lynn Valley,0
+229,1,Lonsdale Quay,1
+230,0,Upper Lonsdale,0
+230,1,Lonsdale Quay,1
+231,0,Lonsdale Quay,0
+231,1,Harbourside,1
+232,0,Phibbs Exchange,0
+232,1,Grouse Mountain,1
+236,0,Grouse Mountain,0
+236,1,Lonsdale Quay,1
+240,0,Lynn Valley,0
+240,1,Downtown,1
+241,0,Upper Lonsdale,0
+241,1,Downtown,1
+245,0,Capilano University,0
+245,1,Phibbs Exchange,1
+246,0,Highland,0
+246,1,Downtown,1
+247,0,Grouse Mountain,0
+247,1,Downtown,1
+249,0,Delbrook,0
+249,1,Lonsdale Quay,1
+250,0,Vancouver,0
+250,1,Dundarave/Horseshoe Bay,1
+251,0,Park Royal,0
+251,1,Queens,1
+252,0,Park Royal,0
+252,1,Inglewood,1
+253,0,Park Royal/Vancouver,0
+253,1,Caulfeild,1
+254,0,British Properties,0
+254,1,Park Royal/Vancouver,1
+255,0,Capilano University,0
+255,1,Dundarave,1
+256,0,Whitby Estates,0
+256,1,Park Royal,1
+257,0,Vancouver,0
+257,1,Horseshoe Bay,1
+258,0,West Vancouver,0
+258,1,UBC,1
+262,0,Lions Bay/Brunswick,0
+262,1,Caulfeild,1
+280,0,Snug Cove,0
+280,1,Bluewater,1
+281,0,Eaglecliff,0
+281,1,Snug Cove,1
+282,0,Mt Gardner,0
+282,1,Snug Cove,1
+301,0,Newton Exchange,0
+301,1,Brighouse Station,1
+310,0,Scottsdale,0
+310,1,Ladner,1
+311,0,Bridgeport Station,0
+311,1,Scottsdale,1
+312,0,Scott Road Station,0
+312,1,Scottsdale,1
+314,0,Surrey Central Station,0
+314,1,Scott & 96/Sunbury,1
+316,0,Surrey Central Station,0
+316,1,Scottsdale,1
+319,0,Scott Road Station,0
+319,1,Newton Exchange,1
+320,0,Fleetwood/Langley Centre,0
+320,1,Surrey Central Station,1
+321,0,Surrey Central Station,0
+321,1,White Rock Centre,1
+322,0,Newton Exchange,0
+322,1,Scottsdale,1
+323,0,Surrey Central Station,0
+323,1,Newton Exchange,1
+324,0,Surrey Central Station,0
+324,1,Newton Exchange,1
+325,0,Surrey Central Station,0
+325,1,Newton Exchange,1
+326,0,Guildford,0
+326,1,Surrey Central Station,1
+329,0,Surrey Central Station,0
+329,1,Scottsdale,1
+335,0,Newton Exchange,0
+335,1,Surrey Central Station,1
+337,0,Fraser Heights,0
+337,1,Surrey Central Station,1
+338,0,East Fraser Heights,0
+338,1,Guildford,1
+340,0,Scottsdale,0
+340,1,22nd St Station,1
+341,0,Guildford,0
+341,1,Newton Exchange,1
+342,0,Langley Centre,0
+342,1,Newton Exchange,1
+345,0,King George Station,0
+345,1,White Rock Centre,1
+350,0,White Rock Centre,0
+350,1,Crescent Beach,1
+351,0,Bridgeport Station,0
+351,1,White Rock Centre,1
+352,0,Bridgeport Station,0
+352,1,Ocean Park,1
+354,0,Bridgeport Station,0
+354,1,White Rock South,1
+360,0,Peace Arch Hospital,0
+360,1,Ocean Park,1
+361,0,White Rock Centre,0
+361,1,Ocean Park,1
+362,0,White Rock Centre,0
+362,1,Seaside,1
+363,0,Southpoint,0
+363,1,Peace Arch Hospital,1
+364,0,Langley Centre,0
+364,1,Scottsdale,1
+370,0,Willowbrook,0
+370,1,Cloverdale,1
+371,0,Surrey Central Station,0
+371,1,Scott Road Station,1
+372,0,Langley Centre,0
+372,1,Clayton Heights,1
+373,0,Guildford,0
+373,1,Surrey Central Station,1
+375,0,Guildford,0
+375,1,White Rock South,1
+388,0,Carvolth Exchange,0
+388,1,22nd St Station,1
+391,0,Scott Road Station,0
+391,1,Scottsdale,1
+393,0,Surrey Central Station,0
+393,1,Newton Exchange,1
+394,0,King George Station,0
+394,1,White Rock Centre,1
+395,0,Langley Centre,0
+395,1,King George Station,1
+401,0,Brighouse Station,0
+401,1,One Road,1
+402,0,Brighouse Station,0
+402,1,Two Road,1
+403,0,Bridgeport Station,0
+403,1,Three Road,1
+404,0,Four Road,0
+404,1,Brighouse Station,1
+405,0,Cambie,0
+405,1,Five Road,1
+406,0,Brighouse Station,0
+406,1,Steveston,1
+407,0,Bridgeport,0
+407,1,Gilbert,1
+408,0,Ironwood/Riverport,0
+408,1,Brighouse Station,1
+410,0,22nd St Station,0
+410,1,Brighouse Station,1
+412,0,Bridgeport Station,0
+412,1,Sea Island South,1
+413,0,Riverport,0
+413,1,Steveston,1
+414,0,Brighouse Station,0
+414,1,Richmond Oval,1
+416,0,East Cambie,0
+416,1,Brighouse Station,1
+418,0,22nd St Station,0
+418,1,Kingswood,1
+430,0,Metrotown Station,0
+430,1,Brighouse Station,1
+480,0,Bridgeport Station,0
+480,1,UBC,1
+501,0,Surrey Central Station,0
+501,1,Langley Centre,1
+502,0,Langley Centre,0
+502,1,Surrey Central Station,1
+503,0,Langley Centre/Aldergrove,0
+503,1,Surrey Central Station,1
+509,0,Walnut Grove,0
+509,1,Surrey Central Station,1
+531,0,Willowbrook,0
+531,1,White Rock Centre,1
+555,0,Carvolth Exchange,0
+555,1,Lougheed Station,1
+560,0,Murrayville,0
+560,1,Langley Centre,1
+561,0,Brookswood,0
+561,1,Langley Centre,1
+562,0,Walnut Grove,0
+562,1,Langley Centre,1
+563,0,Langley Centre,0
+563,1,Fernridge,1
+564,0,Willowbrook,0
+564,1,Langley Centre,1
+595,0,Maple Meadows Station,0
+595,1,Langley Centre,1
+601,0,Bridgeport Station,0
+601,1,South Delta,1
+602,0,Bridgeport Station,0
+602,1,Tsawwassen Heights,1
+603,0,South Delta Exchange/Bridgeport Station,0
+603,1,Beach Grove,1
+604,0,Bridgeport Station,0
+604,1,English Bluff,1
+606,0,Ladner Ring to Ladner Exchange,0
+606,1,Ladner Ring to West Ladner,1
+608,0,Ladner Ring to Ladner Exchange,0
+608,1,Ladner Ring to West Ladner,1
+609,0,Ladner Exchange,0
+609,1,South Delta Exchange,1
+614,0,South Delta Exchange,0
+614,1,English Bluff,1
+616,0,Ladner Exchange,0
+616,1,Ladner South,1
+618,0,Ladner North,0
+618,1,Ladner Exchange,1
+619,0,South Delta Exchange,0
+619,1,Boundary Bay,1
+620,0,Bridgeport Station,0
+620,1,Tsawwassen Ferry,1
+640,0,Scott Road Station,0
+640,1,Ladner Exchange,1
+701,0,Haney Place/Maple Ridge East,0
+701,1,Coquitlam Central Station,1
+719,0,Meadowtown,0
+719,1,Fraser Way,1
+722,0,Meadowtown,0
+722,1,Bonson,1
+733,0,Rock Ridge,0
+733,1,Haney Place,1
+741,0,Anderson Creek,0
+741,1,Haney Place,1
+743,0,Haney Place,0
+743,1,Meadowtown,1
+744,0,Haney Place,0
+744,1,Meadowtown,1
+745,0,Cottonwood,0
+745,1,Haney Place,1
+746,0,Albion,0
+746,1,Haney Place,1
+748,0,Thornhill,0
+748,1,Haney Place,1
+749,0,Ruskin,0
+749,1,Haney Place,1
+791,0,Haney Place,0
+791,1,Braid Station,1
+840,1,Brookswood Special,1
+848,1,Port Moody Secondary,1
+855,0,Elgin Park Special,0
+855,1,Southpoint Special,1
+861,0,Port Coquitlam Centre,0
+861,1,Port Coquitlam South,1
+863,0,Terry Fox Secondary,0
+864,1,Newton Exchange Special,1
+865,1,Haney Place Special,1
+880,0,Windsor Secondary,0
+880,1,Capilano University,1
+881,0,Carson Graham Secondary,0
+881,1,Pemberton Heights,1
+894,0,Surrey Central Station,0
+894,1,King George Station,1
+N10,0,YVR-Downtown NightBus,0
+N10,1,YVR-Brighouse Station NightBus,1
+N15,0,Downtown NightBus,0
+N15,1,Cambie NightBus,1
+N17,0,Downtown NightBus,0
+N17,1,UBC NightBus,1
+N19,0,Surrey Central Station NightBus,0
+N19,1,Downtown NightBus,1
+N20,0,Downtown NightBus,0
+N20,1,Victoria NightBus,1
+N22,0,Downtown NightBus,0
+N22,1,Macdonald NightBus,1
+N24,0,Lynn Valley NightBus,0
+N24,1,Downtown NightBus,1
+N35,0,SFU NightBus,0
+N35,1,Downtown NightBus,1
+N8,0,Fraser NightBus,0
+N8,1,Downtown NightBus,1
+N9,0,Coquitlam Central Station NightBus,0
+N9,1,Downtown NightBus,1
+Canada Line,0,Northbound,0
+Canada Line,1,Southbound,1
+Expo Line,0,Eastbound,0
+Expo Line,1,Westbound,1
+Millennium Line,0,Eastbound,0
+Millennium Line,1,Westbound,1
+WCE,0,Mission City,0
+WCE,1,Waterfront,1
+SeaBus,0,Lonsdale Quay,0
+SeaBus,1,Waterfront,1
+R1,0,King George Blvd to Guildford,0
+R1,1,King George Blvd to Newton Exchange,1
+R2,0,Marine Drive to Phibbs Exchange,0
+R2,1,Marine Drive to Park Royal,1
+R3,0,Lougheed Hwy to Haney Place,0
+R3,1,Lougheed Hwy to Coq Ctrl Station,1
+R4,0,41st Ave to Joyce Station,0
+R4,1,41st Ave to UBC,1
+R5,0,Hastings St to SFU,0
+R5,1,Hastings St to Burrard Station,1
+R6,0,Scott Rd to Scott Road Station,0
+R6,1,Scott Rd to Newton Exchange,1
+900,0,Bike Bus to Bridgeport Station,0
+900,1,Bike Bus to Tsawwassen Ferry,1

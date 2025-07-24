@@ -1,0 +1,2 @@
+agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_fare_url
+TL,TransLink,https://www.translink.ca,America/Vancouver,en,https://www.translink.ca/transit-fares/pricing-and-fare-zones?utm_source=referral&utm_medium=google+maps&utm_campaign=website
