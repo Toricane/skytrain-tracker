@@ -88,7 +88,7 @@ def time_to_seconds(time_str):
         if h >= 24:
             h -= 24
         return h * 3600 + m * 60 + s
-    except:
+    except Exception:
         return None
 
 
