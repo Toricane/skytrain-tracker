@@ -687,7 +687,9 @@ function getPopupContent(stopName) {
     let content = `<b>${stopName}</b><br><br><b>Next Arrivals:</b><br>`;
 
     if (upcomingArrivals.length === 0) {
-        content += "No more trains today.";
+        // Determine the vehicle type based on the line information
+        const vehicleType = getVehicleTypeForStop(stopName);
+        content += `No more ${vehicleType} today.`;
     } else {
         upcomingArrivals.forEach((arrival) => {
             const diffSeconds = arrival.time - secondsToday;
@@ -697,6 +699,39 @@ function getPopupContent(stopName) {
     }
 
     return content;
+}
+
+function getVehicleTypeForStop(stopName) {
+    // Find the line for this stop from stationData
+    for (const [stationName, stationInfo] of Object.entries(stationData)) {
+        for (const platform of stationInfo.platforms) {
+            if (platform.stopNameRaw === stopName) {
+                const line = platform.line;
+
+                // Determine vehicle type based on line
+                if (
+                    line === "Canada Line" ||
+                    line === "Expo Line" ||
+                    line === "Millennium Line"
+                ) {
+                    return "trains";
+                } else if (line.startsWith("R") && line.includes(" ")) {
+                    // RapidBus lines (R1, R2, R3, R4, R5, R6)
+                    return "buses";
+                } else if (line === "99 B-Line") {
+                    return "buses";
+                } else if (line === "SeaBus") {
+                    return "seabuses";
+                } else {
+                    // Default fallback
+                    return "vehicles";
+                }
+            }
+        }
+    }
+
+    // Fallback if no line information found
+    return "vehicles";
 }
 
 function formatCountdown(seconds) {
