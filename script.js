@@ -5,6 +5,10 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
 }).addTo(map);
 
+// Route overlay layer
+let routeLayer = null;
+let routeLayerGroup = null;
+
 const stationMarkers = {};
 const stationData = {}; // To hold all station and platform info
 let trainJourneys = {}; // To hold all train journey data
@@ -25,12 +29,103 @@ const highlightColors = {
     "Millennium Line": "#ffff00", // Neon Yellow
 };
 
+// Function to load and display SkyTrain routes
+async function loadRoutes() {
+    try {
+        const response = await fetch("skytrain_routes.geojson");
+        const routeData = await response.json();
+
+        // Remove existing route layer if it exists
+        if (routeLayer) {
+            map.removeLayer(routeLayer);
+        }
+        if (routeLayerGroup) {
+            map.removeLayer(routeLayerGroup);
+        }
+
+        // Create a new layer group for routes
+        routeLayer = L.geoJSON(routeData, {
+            style: function (feature) {
+                return {
+                    color: feature.properties.color,
+                    weight: 4,
+                    opacity: 0.8,
+                };
+            },
+            onEachFeature: function (feature, layer) {
+                layer.bindTooltip(feature.properties.route_name, {
+                    permanent: false,
+                    direction: "center",
+                });
+            },
+        });
+
+        // Create a layer group and add routes to it
+        routeLayerGroup = L.layerGroup([routeLayer]);
+
+        // Add routes to map first (background layer)
+        routeLayerGroup.addTo(map);
+
+        // Add a simple toggle button for routes
+        const routeControl = L.Control.extend({
+            onAdd: function (map) {
+                const container = L.DomUtil.create(
+                    "div",
+                    "leaflet-bar leaflet-control"
+                );
+                const button = L.DomUtil.create(
+                    "a",
+                    "leaflet-control-zoom-in",
+                    container
+                );
+                button.innerHTML = "🚇";
+                button.title = "Toggle SkyTrain Routes";
+                button.style.width = "30px";
+                button.style.height = "30px";
+                button.style.textAlign = "center";
+                button.style.lineHeight = "30px";
+
+                let routesVisible = true;
+                button.onclick = function () {
+                    if (routesVisible) {
+                        map.removeLayer(routeLayerGroup);
+                        routesVisible = false;
+                    } else {
+                        // Remove and re-add all station markers to ensure they stay on top
+                        const allMarkers = Object.values(stationMarkers);
+                        allMarkers.forEach((marker) => map.removeLayer(marker));
+
+                        // Add routes back
+                        map.addLayer(routeLayerGroup);
+
+                        // Re-add all station markers on top
+                        allMarkers.forEach((marker) => map.addLayer(marker));
+
+                        routesVisible = true;
+                    }
+                };
+
+                return container;
+            },
+        });
+
+        new routeControl({ position: "topright" }).addTo(map);
+
+        console.log("SkyTrain routes loaded and displayed.");
+    } catch (error) {
+        console.error("Error loading route data:", error);
+    }
+}
+
 // Function to fetch and plot station data
 async function plotStations() {
     try {
         const response = await fetch("stations_for_map.csv");
         const data = await response.text();
         const rows = data.split("\n").slice(1);
+
+        // Load routes first (so they appear behind stations)
+        await loadRoutes(); // Load and display SkyTrain routes
 
         rows.forEach((row) => {
             const cols = row.split(",");

@@ -11,6 +11,8 @@ This project is an interactive, real-time map that visualizes the Vancouver SkyT
 -   **Real-Time Arrival Info:** Clicking on a station opens a popup with live, second-by-second countdowns for the next three arriving trains, including their destinations.
 -   **Automatic Smart Zoom:** On page load, the map automatically adjusts its zoom level to perfectly frame the entire SkyTrain network.
 -   **Date-Aware Scheduling:** The application is smart enough to know the current day and only displays the schedule for trains that are active today (e.g., weekday vs. weekend service).
+-   **SkyTrain Route Overlays:** Displays the exact GPS-tracked routes of all three SkyTrain lines (Expo, Millennium, and Canada Lines) with their official TransLink colors.
+-   **Interactive Route Toggle:** A dedicated toggle button allows users to show/hide the route overlays while maintaining proper layer ordering.
 
 ## Setup and Installation
 
@@ -27,23 +29,34 @@ The project relies on GTFS (General Transit Feed Specification) data. The requir
 
 To download the latest data, you can use the [TransLink GTFS Static Data](https://www.translink.ca/about-us/doing-business-with-translink/app-developer-resources/gtfs/gtfs-data) website.
 
-### 3. Generate a Schedule for Today
+### 3. Generate Data Files
 
-Before launching the web application, you need to run a Python script to process the raw GTFS data into a format that the web interface can use. This script intelligently filters the schedule to only include trains running on the current day.
+Before launching the web application, you need to run Python scripts to process the raw GTFS data into formats that the web interface can use. These scripts intelligently filter the schedule to only include trains running on the current day and extract the precise route geometries.
 
-First, install the necessary Python library:
+First, install the necessary Python libraries:
 
 ```bash
 pip install pandas
 ```
 
-Then, run the data processing script:
+Then, run the data processing scripts:
 
 ```bash
+# Generate schedule and station data
 python format_data.py
+
+# Extract SkyTrain route geometries
+python extract_routes.py
 ```
 
-This will create/update three essential files: `stations_for_map.csv`, `train_journeys.json`, and `station_schedules.json`. You only need to run this script once, or whenever you update the GTFS data in the `google_transit/` directory.
+This will create/update four essential files:
+
+-   `stations_for_map.csv` - Station coordinates and line information
+-   `train_journeys.json` - Real-time train journey data
+-   `station_schedules.json` - Station arrival schedules
+-   `skytrain_routes.geojson` - Precise GPS coordinates for all SkyTrain routes
+
+You only need to run these scripts once, or whenever you update the GTFS data in the `google_transit/` directory.
 
 ## Running the Application
 
@@ -64,4 +77,15 @@ A simple way to do this is with Python's built-in HTTP server.
 
     [http://localhost:8000](http://localhost:8000)
 
-You should now see the live SkyTrain tracker in action!
+You should now see the live SkyTrain tracker in action! The map will display:
+
+-   **Station markers** in their respective line colors
+-   **SkyTrain route overlays** showing the exact paths of all three lines
+-   **Interactive controls** including a route toggle button (🚇) in the top-right corner
+-   **Real-time train tracking** with live arrival information when you click on stations
+
+The route overlays use the official TransLink color scheme:
+
+-   **Expo Line**: Blue (#005dab)
+-   **Millennium Line**: Yellow (#ffd204)
+-   **Canada Line**: Teal (#009ac7)
