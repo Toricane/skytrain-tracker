@@ -11,22 +11,25 @@ def extract_transit_routes():
         # SkyTrain lines
         "30052": {"name": "Millennium Line", "color": "#ffd204", "type": "skytrain"},
         "30053": {"name": "Expo Line", "color": "#005dab", "type": "skytrain"},
-        "13686": {"name": "Canada Line", "color": "#009ac7", "type": "skytrain"},
-        # RapidBus lines - individual names but same color
+        "13686": {
+            "name": "Canada Line",
+            "color": "#009ac7",
+            "type": "skytrain",
+        },  # RapidBus lines - individual names but same color
         "37808": {
             "name": "R1 King George Blvd",
-            "color": "#008522",
+            "color": "#009f4a",
             "type": "rapidbus",
         },
-        "38311": {"name": "R2 Marine Dr", "color": "#008522", "type": "rapidbus"},
-        "37809": {"name": "R3 Lougheed Hwy", "color": "#008522", "type": "rapidbus"},
-        "37810": {"name": "R4 41st Ave", "color": "#008522", "type": "rapidbus"},
-        "37807": {"name": "R5 Hastings St", "color": "#008522", "type": "rapidbus"},
-        "46604": {"name": "R6 Scott Rd", "color": "#008522", "type": "rapidbus"},
+        "38311": {"name": "R2 Marine Dr", "color": "#009f4a", "type": "rapidbus"},
+        "37809": {"name": "R3 Lougheed Hwy", "color": "#009f4a", "type": "rapidbus"},
+        "37810": {"name": "R4 41st Ave", "color": "#009f4a", "type": "rapidbus"},
+        "37807": {"name": "R5 Hastings St", "color": "#009f4a", "type": "rapidbus"},
+        "46604": {"name": "R6 Scott Rd", "color": "#009f4a", "type": "rapidbus"},
         # 99 B-Line
-        "6641": {"name": "99 B-Line", "color": "#d04110", "type": "bline"},
+        "6641": {"name": "99 B-Line", "color": "#f37a22", "type": "bline"},
         # SeaBus
-        "6771": {"name": "SeaBus", "color": "#746661", "type": "seabus"},
+        "6771": {"name": "SeaBus", "color": "#87746b", "type": "seabus"},
     }
 
     # Read trips to get shape IDs for each route

@@ -24,18 +24,18 @@ const lineColors = {
     "Millennium Line": "#E1B903",
 
     // RapidBus lines - individual names but same color
-    "R1 King George Blvd": "#008522",
-    "R2 Marine Dr": "#008522",
-    "R3 Lougheed Hwy": "#008522",
-    "R4 41st Ave": "#008522",
-    "R5 Hastings St": "#008522",
-    "R6 Scott Rd": "#008522",
+    "R1 King George Blvd": "#009f4a",
+    "R2 Marine Dr": "#009f4a",
+    "R3 Lougheed Hwy": "#009f4a",
+    "R4 41st Ave": "#009f4a",
+    "R5 Hastings St": "#009f4a",
+    "R6 Scott Rd": "#009f4a",
 
     // 99 B-Line
-    "99 B-Line": "#D04110",
+    "99 B-Line": "#f37a22",
 
     // SeaBus
-    SeaBus: "#746661",
+    SeaBus: "#87746b",
 };
 
 const highlightColors = {
@@ -53,7 +53,7 @@ const highlightColors = {
     "R6 Scott Rd": "#00ff00", // Neon Green
 
     // 99 B-Line
-    "99 B-Line": "#ff6600", // Neon Orange
+    "99 B-Line": "#FFD300", // Bright Orange
 
     // SeaBus
     SeaBus: "#ffcc99", // Light Brown
