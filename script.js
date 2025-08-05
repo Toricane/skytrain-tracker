@@ -35,6 +35,7 @@ let trainStates = {}; // To hold the current state of each train
 let stationTrainCount = {}; // To count how many trains are at each station
 let stationSchedules = {}; // To hold schedule for each station
 let openPopupInfo = null; // To track the currently open popup
+let locationMarker = null; // To keep track of the user's location marker
 
 const lineColors = {
     // SkyTrain lines
@@ -82,6 +83,7 @@ const highlightColors = {
 let isAppLoaded = false;
 let currentTheme = localStorage.getItem("theme") || "light";
 let routesVisible = true;
+let locationVisible = false;
 
 // ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", function () {
@@ -167,29 +169,7 @@ function setupMapControls() {
 
     // Location button
     const locateBtn = document.getElementById("locate-btn");
-    locateBtn.addEventListener("click", () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    map.setView([lat, lng], 15);
-
-                    L.marker([lat, lng])
-                        .addTo(map)
-                        .bindPopup("Your Location")
-                        .openPopup();
-                },
-                (error) => {
-                    updateStatus("Location access denied", "error");
-                    setTimeout(() => updateStatus("Live", "success"), 3000);
-                }
-            );
-        } else {
-            updateStatus("Geolocation not supported", "error");
-            setTimeout(() => updateStatus("Live", "success"), 3000);
-        }
-    });
+    locateBtn.addEventListener("click", toggleLocation);
 
     // Fullscreen button
     const fullscreenBtn = document.getElementById("fullscreen-btn");
@@ -240,6 +220,59 @@ function toggleSatellite() {
         satelliteToggle.classList.add("active");
         iconSpan.textContent = "🛰️";
         satelliteToggle.title = "Switch to Street View";
+    }
+}
+
+function toggleLocation() {
+    const locateBtn = document.getElementById("locate-btn");
+
+    if (locationVisible) {
+        // Hide location marker
+        if (locationMarker) {
+            map.removeLayer(locationMarker);
+            locationMarker = null;
+        }
+        locationVisible = false;
+        locateBtn.classList.remove("active");
+        locateBtn.title = "Show My Location";
+    } else {
+        // Show location marker
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    if (locationMarker) {
+                        locationMarker.setLatLng([lat, lng]);
+                    } else {
+                        locationMarker = L.circleMarker([lat, lng], {
+                            radius: 8,
+                            fillColor: "#4a86e8",
+                            color: "#ffffff",
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.9,
+                        })
+                            .addTo(map)
+                            .bindPopup("Your Location");
+                    }
+
+                    map.setView([lat, lng], 15);
+                    locationMarker.openPopup();
+                    locationVisible = true;
+                    locateBtn.classList.add("active");
+                    locateBtn.title = "Hide My Location";
+                },
+                (error) => {
+                    updateStatus("Location access denied", "error");
+                    setTimeout(() => updateStatus("Live", "success"), 3000);
+                }
+            );
+        } else {
+            updateStatus("Geolocation not supported", "error");
+            setTimeout(() => updateStatus("Live", "success"), 3000);
+        }
     }
 }
 
