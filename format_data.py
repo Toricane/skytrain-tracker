@@ -56,6 +56,7 @@ def get_active_services():
 trips = pd.read_csv("google_transit/trips.txt")
 stop_times = pd.read_csv("google_transit/stop_times.txt")
 stops = pd.read_csv("google_transit/stops.txt")
+routes = pd.read_csv("google_transit/routes.txt")
 
 # Filter trips by active services for today
 active_services = get_active_services()
@@ -63,14 +64,50 @@ if not active_services:
     print("Warning: No active services found for today. Output files will be empty.")
 trips = trips[trips["service_id"].isin(active_services)]
 
-# Filter for Skytrain trips
-skytrain_trips = trips[trips["trip_headsign"].str.contains(" Line", na=False)].copy()
+# Merge with routes to get route information
+trips_with_routes = pd.merge(trips, routes, on="route_id")
 
-# Extract line name from trip_headsign
-skytrain_trips["line"] = skytrain_trips["trip_headsign"].str.extract(r"(\w+\sLine)")[0]
+# Define the transit services we want to include
+transit_services = {
+    # SkyTrain lines
+    "Canada Line": {"route_ids": ["13686"], "type": "skytrain"},
+    "Expo Line": {"route_ids": ["30053"], "type": "skytrain"},
+    "Millennium Line": {"route_ids": ["30052"], "type": "skytrain"},
+    # RapidBus lines - individual names but same color
+    "R1 King George Blvd": {"route_ids": ["37808"], "type": "rapidbus"},
+    "R2 Marine Dr": {"route_ids": ["38311"], "type": "rapidbus"},
+    "R3 Lougheed Hwy": {"route_ids": ["37809"], "type": "rapidbus"},
+    "R4 41st Ave": {"route_ids": ["37810"], "type": "rapidbus"},
+    "R5 Hastings St": {"route_ids": ["37807"], "type": "rapidbus"},
+    "R6 Scott Rd": {"route_ids": ["46604"], "type": "rapidbus"},
+    # 99 B-Line
+    "99 B-Line": {"route_ids": ["6641"], "type": "bline"},
+    # SeaBus
+    "SeaBus": {"route_ids": ["6771"], "type": "seabus"},
+}
+
+# Filter trips for our selected transit services
+selected_route_ids = []
+for service_info in transit_services.values():
+    selected_route_ids.extend(service_info["route_ids"])
+
+selected_trips = trips_with_routes[
+    trips_with_routes["route_id"].isin(selected_route_ids)
+].copy()
+
+
+# Add line information based on route_id
+def get_line_name(route_id):
+    for line_name, service_info in transit_services.items():
+        if route_id in service_info["route_ids"]:
+            return line_name
+    return "Unknown"
+
+
+selected_trips["line"] = selected_trips["route_id"].apply(get_line_name)
 
 # Merge with stop times and then with stops to get a complete dataframe
-schedule_with_stops = pd.merge(skytrain_trips, stop_times, on="trip_id")
+schedule_with_stops = pd.merge(selected_trips, stop_times, on="trip_id")
 all_data = pd.merge(schedule_with_stops, stops, on="stop_id")
 
 # --- Create station data for the map ---
