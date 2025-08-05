@@ -1,26 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <title>Vancouver Transit Tracker</title>
+        <meta name="description" content="Real-time Vancouver transit tracking with live SkyTrain, RapidBus, and SeaBus positions">
+        <meta name="theme-color" content="#005dab">
+        <!-- PWA Manifest -->
+        <link rel="manifest" href="manifest.json">
+        <!-- Apple PWA Support -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="VanTransit">
+        <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMwMDVkYWIiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgeD0iNCIgeT0iNCIgcng9IjIiLz4KPHBhdGggZD0ibTkgOSA1IDEyIDEuNzc0LTUuMjI2TDIxIDEwIDl8OYciLz4KPC9zdmc+Cjwvc3ZnPg==">
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzAwNWRhYiIvPgo8c3ZnIHg9IjgiIHk9IjgiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgeD0iNCIgeT0iNCIgcng9IjIiLz4KPHBhdGggZD0ibTkgOSA1IDEyIDEuNzc0LTUuMjI2TDIxIDEwIDl8OSYciLz4KPC9zdmc+Cjwvc3ZnPg==">
+        <!-- Leaflet CSS -->
         <link
             rel="stylesheet"
             href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
             crossorigin=""
-        />
-        <link rel="stylesheet" href="style.css" />
+        >
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>Vancouver Transit Tracker</h1>
-        <div id="map"></div>
-
-        <script
-            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""
-        ></script>
+        <!-- Loading Screen -->
+        <div id="loading-screen">
+            <div class="loading-content">
+                <div class="loading-logo">🚇</div>
+                <h2>Vancouver Transit Tracker</h2>
+                <div class="loading-spinner"></div>
+                <p>Loading transit data...</p>
+            </div>
+        </div>
+        <!-- Main App -->
+        <div id="app">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-content">
+                    <div class="logo-section">
+                        <span class="logo-icon">🚇</span>
+                        <div class="logo-text">
+                            <h1>Vancouver Transit</h1>
+                            <span class="subtitle">Real-Time Tracker</span>
+                        </div>
+                    </div>
+                    <div class="header-controls">
+                        <button id="theme-toggle" class="control-btn" title="Toggle Dark Mode">
+                            <span class="theme-icon">🌙</span>
+                        </button>
+                        <button id="info-toggle" class="control-btn" title="About">
+                            <span>ℹ️</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-indicator" id="connection-status"></span>
+                    <span id="status-text">Loading...</span>
+                </div>
+                <div class="status-item" id="last-updated">
+                    <span>🕐</span>
+                    <span>--:--</span>
+                </div>
+            </div>
+            <!-- Map Container -->
+            <div class="map-container">
+                <div id="map"></div>
+                <!-- Map Controls Overlay -->
+                <div class="map-controls">
+                    <button id="route-toggle" class="map-control-btn active" title="Toggle Routes">
+                        <span>🛤️</span>
+                    </button>
+                    <button id="locate-btn" class="map-control-btn" title="My Location">
+                        <span>📍</span>
+                    </button>
+                    <button id="fullscreen-btn" class="map-control-btn" title="Fullscreen">
+                        <span>⛶</span>
+                    </button>
+                </div>
+                <!-- Legend -->
+                <div class="legend" id="legend">
+                    <div class="legend-header">
+                        <h3>Transit Lines</h3>
+                        <button class="legend-toggle">−</button>
+                    </div>
+                    <div class="legend-content">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #005dab"></div>
+                            <span>Expo Line</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #ffd204"></div>
+                            <span>Millennium Line</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #009ac7"></div>
+                            <span>Canada Line</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #009f4a"></div>
+                            <span>RapidBus</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #f37a22"></div>
+                            <span>99 B-Line</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #87746b"></div>
+                            <span>SeaBus</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Info Modal -->
+            <div id="info-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>About Vancouver Transit Tracker</h2>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Real-time tracking of Vancouver's transit network including SkyTrain, RapidBus, 99 B-Line, and SeaBus services.</p>
+                        <h3>Features:</h3>
+                        <ul>
+                            <li>Live vehicle positions and arrivals</li>
+                            <li>Interactive route maps</li>
+                            <li>Real-time station information</li>
+                            <li>Mobile-optimized interface</li>
+                        </ul>
+                        <p class="data-source">
+                            Data provided by
+                            <strong>TransLink</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Scripts -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script src="script.js"></script>
+        <!-- Service Worker Registration -->
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(function(registration) {
+                            console.log('ServiceWorker registration successful:', registration.scope);
+                        })
+                        .catch(function(err) {
+                            console.log('ServiceWorker registration failed:', err);
+                        });
+                });
+            }
+        </script>
     </body>
 </html>

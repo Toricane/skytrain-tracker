@@ -19,7 +19,7 @@ let openPopupInfo = null; // To track the currently open popup
 
 const lineColors = {
     // SkyTrain lines
-    "Canada Line": "#008CB5",
+    "Canada Line": "#009ac7",
     "Expo Line": "#005DAB",
     "Millennium Line": "#E1B903",
 
@@ -59,6 +59,213 @@ const highlightColors = {
     SeaBus: "#ffcc99", // Light Brown
 };
 
+// ===== UI STATE MANAGEMENT =====
+let isAppLoaded = false;
+let currentTheme = localStorage.getItem("theme") || "light";
+let routesVisible = true;
+
+// ===== INITIALIZATION =====
+document.addEventListener("DOMContentLoaded", function () {
+    initializeUI();
+    initializeMap();
+    loadAppData();
+});
+
+// ===== UI INITIALIZATION =====
+function initializeUI() {
+    // Set initial theme
+    document.documentElement.setAttribute("data-theme", currentTheme);
+    updateThemeIcon();
+
+    // Theme toggle
+    const themeToggle = document.getElementById("theme-toggle");
+    themeToggle.addEventListener("click", toggleTheme);
+
+    // Info modal
+    const infoToggle = document.getElementById("info-toggle");
+    const infoModal = document.getElementById("info-modal");
+    const modalClose = document.querySelector(".modal-close");
+
+    infoToggle.addEventListener("click", () => {
+        infoModal.classList.add("active");
+    });
+
+    modalClose.addEventListener("click", () => {
+        infoModal.classList.remove("active");
+    });
+
+    infoModal.addEventListener("click", (e) => {
+        if (e.target === infoModal) {
+            infoModal.classList.remove("active");
+        }
+    });
+
+    // Legend toggle
+    const legendToggle = document.querySelector(".legend-toggle");
+    const legend = document.getElementById("legend");
+
+    legendToggle.addEventListener("click", () => {
+        legend.classList.toggle("collapsed");
+        legendToggle.textContent = legend.classList.contains("collapsed")
+            ? "+"
+            : "−";
+    });
+
+    // Map controls
+    setupMapControls();
+
+    // Update status
+    updateStatus("Initializing...", "loading");
+
+    console.log("UI initialized");
+}
+
+function initializeMap() {
+    // Map initialization will be done in the existing code below
+    console.log("Map initialization started");
+}
+
+function toggleTheme() {
+    currentTheme = currentTheme === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", currentTheme);
+    localStorage.setItem("theme", currentTheme);
+    updateThemeIcon();
+}
+
+function updateThemeIcon() {
+    const themeIcon = document.querySelector(".theme-icon");
+    themeIcon.textContent = currentTheme === "light" ? "🌙" : "☀️";
+}
+
+function setupMapControls() {
+    // Route toggle (will integrate with existing route functionality)
+    const routeToggle = document.getElementById("route-toggle");
+    routeToggle.addEventListener("click", toggleRoutes);
+
+    // Location button
+    const locateBtn = document.getElementById("locate-btn");
+    locateBtn.addEventListener("click", () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    map.setView([lat, lng], 15);
+
+                    L.marker([lat, lng])
+                        .addTo(map)
+                        .bindPopup("Your Location")
+                        .openPopup();
+                },
+                (error) => {
+                    updateStatus("Location access denied", "error");
+                    setTimeout(() => updateStatus("Live", "success"), 3000);
+                }
+            );
+        } else {
+            updateStatus("Geolocation not supported", "error");
+            setTimeout(() => updateStatus("Live", "success"), 3000);
+        }
+    });
+
+    // Fullscreen button
+    const fullscreenBtn = document.getElementById("fullscreen-btn");
+    fullscreenBtn.addEventListener("click", toggleFullscreen);
+}
+
+function toggleRoutes() {
+    if (routeLayerGroup) {
+        if (routesVisible) {
+            map.removeLayer(routeLayerGroup);
+            routesVisible = false;
+        } else {
+            // Remove and re-add all station markers to ensure they stay on top
+            const allMarkers = Object.values(stationMarkers);
+            allMarkers.forEach((marker) => map.removeLayer(marker));
+
+            // Add routes back
+            map.addLayer(routeLayerGroup);
+
+            // Re-add all station markers on top
+            allMarkers.forEach((marker) => map.addLayer(marker));
+
+            routesVisible = true;
+        }
+
+        const routeToggle = document.getElementById("route-toggle");
+        routeToggle.classList.toggle("active", routesVisible);
+    }
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch((err) => {
+            console.log("Fullscreen error:", err);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+function updateStatus(message, type = "success") {
+    const statusText = document.getElementById("status-text");
+    const statusIndicator = document.getElementById("connection-status");
+
+    statusText.textContent = message;
+    statusIndicator.className = `status-indicator ${type}`;
+}
+
+function updateLastUpdated() {
+    const lastUpdated = document.getElementById("last-updated");
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+    lastUpdated.innerHTML = `<span>🕐</span><span>${timeString}</span>`;
+}
+
+function hideLoadingScreen() {
+    const loadingScreen = document.getElementById("loading-screen");
+    const app = document.getElementById("app");
+
+    setTimeout(() => {
+        loadingScreen.style.opacity = "0";
+        setTimeout(() => {
+            loadingScreen.style.display = "none";
+            app.classList.add("loaded");
+            isAppLoaded = true;
+            updateStatus("Live", "success");
+            updateLastUpdated();
+        }, 500);
+    }, 1000); // Show loading for at least 1 second
+}
+
+async function loadAppData() {
+    try {
+        updateStatus("Loading routes...", "loading");
+        await loadRoutes();
+
+        updateStatus("Loading stations...", "loading");
+        await loadStations();
+
+        updateStatus("Loading schedules...", "loading");
+        await loadSchedules();
+
+        updateStatus("Starting real-time updates...", "loading");
+        startRealTimeUpdates();
+
+        hideLoadingScreen();
+    } catch (error) {
+        console.error("Error loading app data:", error);
+        updateStatus("Failed to load data", "error");
+        setTimeout(() => {
+            updateStatus("Retrying...", "loading");
+            loadAppData();
+        }, 5000);
+    }
+}
+
 // Function to load and display transit routes
 async function loadRoutes() {
     try {
@@ -96,68 +303,21 @@ async function loadRoutes() {
         // Add routes to map first (background layer)
         routeLayerGroup.addTo(map);
 
-        // Add a simple toggle button for routes
-        const routeControl = L.Control.extend({
-            onAdd: function (map) {
-                const container = L.DomUtil.create(
-                    "div",
-                    "leaflet-bar leaflet-control"
-                );
-                const button = L.DomUtil.create(
-                    "a",
-                    "leaflet-control-zoom-in",
-                    container
-                );
-                button.innerHTML = "🚇";
-                button.title = "Toggle Transit Routes";
-                button.style.width = "30px";
-                button.style.height = "30px";
-                button.style.textAlign = "center";
-                button.style.lineHeight = "30px";
-
-                let routesVisible = true;
-                button.onclick = function () {
-                    if (routesVisible) {
-                        map.removeLayer(routeLayerGroup);
-                        routesVisible = false;
-                    } else {
-                        // Remove and re-add all station markers to ensure they stay on top
-                        const allMarkers = Object.values(stationMarkers);
-                        allMarkers.forEach((marker) => map.removeLayer(marker));
-
-                        // Add routes back
-                        map.addLayer(routeLayerGroup);
-
-                        // Re-add all station markers on top
-                        allMarkers.forEach((marker) => map.addLayer(marker));
-
-                        routesVisible = true;
-                    }
-                };
-
-                return container;
-            },
-        });
-
-        new routeControl({ position: "topright" }).addTo(map);
-
         console.log("Transit routes loaded and displayed.");
     } catch (error) {
         console.error("Error loading route data:", error);
+        throw error;
     }
 }
 
 // Function to fetch and plot station data
-async function plotStations() {
+async function loadStations() {
     try {
         const response = await fetch("stations_for_map.csv?t=" + Date.now());
         const data = await response.text();
         const rows = data.split("\n").slice(1);
 
         console.log(`Processing ${rows.length} station rows`);
-
-        // Load routes first (so they appear behind stations)
-        await loadRoutes(); // Load and display SkyTrain routes
 
         let processedCount = 0;
         let skippedCount = 0;
@@ -266,12 +426,36 @@ async function plotStations() {
         // Initial update of marker positions
         updateMarkerPositions();
 
-        // Load the journeys and start the train tracking clock
-        await loadJourneys();
-        await loadStationSchedules();
-        startTrainTracker();
+        console.log("Stations loaded successfully");
     } catch (error) {
         console.error("Error fetching or parsing station data:", error);
+        throw error;
+    }
+}
+
+// Wrapper function for loading schedules
+async function loadSchedules() {
+    try {
+        await loadJourneys();
+        await loadStationSchedules();
+        console.log("Schedules loaded successfully");
+    } catch (error) {
+        console.error("Error loading schedules:", error);
+        throw error;
+    }
+}
+
+// Wrapper function for starting real-time updates
+function startRealTimeUpdates() {
+    try {
+        startTrainTracker();
+        console.log("Real-time updates started");
+
+        // Update the last updated time every minute
+        setInterval(updateLastUpdated, 60000);
+    } catch (error) {
+        console.error("Error starting real-time updates:", error);
+        throw error;
     }
 }
 
@@ -595,4 +779,113 @@ function groupStopsIntoStations(stops) {
     return stations;
 }
 
-plotStations();
+// ===== PWA AND CONNECTIVITY FEATURES =====
+let isOnline = navigator.onLine;
+let updateAvailable = false;
+
+// Check for service worker updates
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (updateAvailable) {
+            showUpdateNotification();
+        }
+    });
+
+    navigator.serviceWorker.ready.then((registration) => {
+        registration.addEventListener("updatefound", () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener("statechange", () => {
+                if (
+                    newWorker.state === "installed" &&
+                    navigator.serviceWorker.controller
+                ) {
+                    updateAvailable = true;
+                    showUpdateNotification();
+                }
+            });
+        });
+    });
+}
+
+// Online/offline status
+window.addEventListener("online", () => {
+    isOnline = true;
+    updateStatus("Connected", "success");
+    hideOfflineNotification();
+});
+
+window.addEventListener("offline", () => {
+    isOnline = false;
+    updateStatus("Offline", "error");
+    showOfflineNotification();
+});
+
+function showUpdateNotification() {
+    const notification = document.createElement("div");
+    notification.className = "update-notification";
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span>🔄</span>
+            <span>New version available!</span>
+            <button onclick="refreshApp()">Update</button>
+            <button onclick="dismissNotification(this.parentElement.parentElement)">Later</button>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add("show");
+    }, 100);
+}
+
+function showOfflineNotification() {
+    if (document.querySelector(".offline-notification")) return;
+
+    const notification = document.createElement("div");
+    notification.className = "offline-notification";
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span>📶</span>
+            <span>You're currently offline. Some features may be limited.</span>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add("show");
+    }, 100);
+}
+
+function hideOfflineNotification() {
+    const notification = document.querySelector(".offline-notification");
+    if (notification) {
+        notification.classList.remove("show");
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.parentElement.removeChild(notification);
+            }
+        }, 300);
+    }
+}
+
+function refreshApp() {
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+        });
+    }
+    location.reload();
+}
+
+function dismissNotification(notification) {
+    notification.classList.remove("show");
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.parentElement.removeChild(notification);
+        }
+    }, 300);
+}
+
+// ===== EXISTING UI CODE CONTINUES =====

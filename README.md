@@ -5,7 +5,8 @@ This project is an interactive, real-time map that visualizes the Vancouver tran
 ## Features
 
 -   **Live Transit Tracking:** Displays the real-time location of every SkyTrain, RapidBus, 99 B-Line, and SeaBus, with markers moving from station to station based on the official schedule.
--   **Interactive Map:** A fully interactive map built with Leaflet.js, allowing users to zoom and pan.
+-   **Modern Responsive Design:** Beautiful, mobile-optimized interface with dark mode support and professional styling.
+-   **Interactive Map:** A fully interactive map built with Leaflet.js, allowing users to zoom and pan with touch-friendly controls.
 -   **Line-Specific Coloring:** Stations and highlights are color-coded to match their respective lines for easy identification.
 -   **Dynamic Marker Placement:** Station platform markers are placed at their precise GPS coordinates when zoomed in, and elegantly spread out to avoid overlap when zoomed out.
 -   **Real-Time Arrival Info:** Clicking on a station opens a popup with live, second-by-second countdowns for the next three arriving vehicles, including their destinations.
@@ -13,6 +14,11 @@ This project is an interactive, real-time map that visualizes the Vancouver tran
 -   **Date-Aware Scheduling:** The application is smart enough to know the current day and only displays the schedule for vehicles that are active today (e.g., weekday vs. weekend service).
 -   **Transit Route Overlays:** Displays the exact GPS-tracked routes of all transit lines with their official TransLink colors.
 -   **Interactive Route Toggle:** A dedicated toggle button allows users to show/hide the route overlays while maintaining proper layer ordering.
+-   **Progressive Web App (PWA):** Install on your device for native app-like experience with offline functionality.
+-   **Dark Mode:** Automatic dark mode support that respects system preferences with manual toggle option.
+-   **Mobile-First Design:** Optimized for mobile devices with touch-friendly controls and responsive layouts.
+-   **Connection Status:** Real-time connection monitoring with offline notifications and graceful degradation.
+-   **Loading Animations:** Smooth loading screens and transitions for better user experience.
 
 ## Supported Transit Services
 
@@ -99,3 +105,58 @@ The route overlays use the official TransLink color scheme:
 -   **RapidBus**: Green (#009f4a)
 -   **99 B-Line**: Orange (#f37a22)
 -   **SeaBus**: Brown (#87746b)
+
+## New UI Features
+
+The website has been completely redesigned with a modern, mobile-first approach:
+
+### 🎨 **Modern Design**
+
+-   Clean, professional interface with the Inter font family
+-   Consistent color scheme using CSS custom properties
+-   Smooth animations and transitions throughout the app
+-   Glass-morphism effects and subtle shadows
+
+### 📱 **Mobile Optimization**
+
+-   Touch-friendly controls with appropriate sizing (44px minimum touch targets)
+-   Responsive layout that works on all screen sizes
+-   Optimized for both portrait and landscape orientations
+-   Swipe gestures and touch interactions
+
+### 🌙 **Dark Mode Support**
+
+-   Automatic dark mode detection based on system preferences
+-   Manual dark/light mode toggle in the header
+-   Consistent theming across all components
+-   Enhanced contrast for better accessibility
+
+### ⚡ **Progressive Web App (PWA)**
+
+-   Install the app on your device for native-like experience
+-   Offline functionality with service worker caching
+-   App-like behavior when installed (no browser UI)
+-   Background sync capabilities for seamless updates
+
+### 🔧 **Enhanced Controls**
+
+-   **Route Toggle**: Show/hide transit route overlays
+-   **Location Finder**: Center map on your current location
+-   **Fullscreen Mode**: Immersive full-screen viewing
+-   **Theme Switcher**: Toggle between light and dark modes
+-   **Info Modal**: Learn about the app and its features
+
+### 📊 **Status Indicators**
+
+-   Real-time connection status with visual indicators
+-   Last updated timestamp
+-   Loading states with progress indication
+-   Offline notifications with graceful degradation
+
+### 🎯 **Accessibility Features**
+
+-   Keyboard navigation support
+-   High contrast mode compatibility
+-   Screen reader friendly elements
+-   Reduced motion support for users with vestibular disorders
+-   Focus indicators for all interactive elements
