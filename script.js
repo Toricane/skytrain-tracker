@@ -1,9 +1,28 @@
 const map = L.map("map").setView([49.2827, -123.1207], 10); // Centered on Vancouver, wider zoom
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "© OpenStreetMap contributors",
-}).addTo(map);
+// Define base layers
+const streetMap = L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap contributors",
+    }
+);
+
+const satelliteMap = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+        maxZoom: 19,
+        attribution:
+            "© Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+    }
+);
+
+// Add default layer (street map)
+streetMap.addTo(map);
+
+// Current map mode tracking
+let isSatelliteMode = false;
 
 // Route overlay layer
 let routeLayer = null;
@@ -142,6 +161,10 @@ function setupMapControls() {
     const routeToggle = document.getElementById("route-toggle");
     routeToggle.addEventListener("click", toggleRoutes);
 
+    // Satellite toggle
+    const satelliteToggle = document.getElementById("satellite-toggle");
+    satelliteToggle.addEventListener("click", toggleSatellite);
+
     // Location button
     const locateBtn = document.getElementById("locate-btn");
     locateBtn.addEventListener("click", () => {
@@ -194,6 +217,29 @@ function toggleRoutes() {
 
         const routeToggle = document.getElementById("route-toggle");
         routeToggle.classList.toggle("active", routesVisible);
+    }
+}
+
+function toggleSatellite() {
+    const satelliteToggle = document.getElementById("satellite-toggle");
+    const iconSpan = satelliteToggle.querySelector("span");
+
+    if (isSatelliteMode) {
+        // Switch to street map
+        map.removeLayer(satelliteMap);
+        map.addLayer(streetMap);
+        isSatelliteMode = false;
+        satelliteToggle.classList.remove("active");
+        iconSpan.textContent = "🗺️";
+        satelliteToggle.title = "Switch to Satellite View";
+    } else {
+        // Switch to satellite map
+        map.removeLayer(streetMap);
+        map.addLayer(satelliteMap);
+        isSatelliteMode = true;
+        satelliteToggle.classList.add("active");
+        iconSpan.textContent = "🛰️";
+        satelliteToggle.title = "Switch to Street View";
     }
 }
 
