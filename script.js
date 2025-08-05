@@ -18,11 +18,39 @@ const satelliteMap = L.tileLayer(
     }
 );
 
+// Dark mode map perfect for dark theme
+const darkMap = L.tileLayer(
+    "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        attribution: "© CartoDB, © OpenStreetMap contributors",
+    }
+);
+
+// Light minimalist style
+const lightMap = L.tileLayer(
+    "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        attribution: "© CartoDB, © OpenStreetMap contributors",
+    }
+);
+
+// Terrain map
+const terrainMap = L.tileLayer(
+    "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom: 17,
+        attribution: "© OpenTopoMap contributors",
+    }
+);
+
 // Add default layer (street map)
 streetMap.addTo(map);
 
 // Current map mode tracking
-let isSatelliteMode = false;
+let currentMapType = "street";
+let currentBaseLayer = streetMap;
 
 // Route overlay layer
 let routeLayer = null;
@@ -163,9 +191,9 @@ function setupMapControls() {
     const routeToggle = document.getElementById("route-toggle");
     routeToggle.addEventListener("click", toggleRoutes);
 
-    // Satellite toggle
-    const satelliteToggle = document.getElementById("satellite-toggle");
-    satelliteToggle.addEventListener("click", toggleSatellite);
+    // Map type selector
+    const mapSelector = document.getElementById("map-selector");
+    mapSelector.addEventListener("change", changeMapType);
 
     // Location button
     const locateBtn = document.getElementById("locate-btn");
@@ -200,27 +228,41 @@ function toggleRoutes() {
     }
 }
 
-function toggleSatellite() {
-    const satelliteToggle = document.getElementById("satellite-toggle");
-    const iconSpan = satelliteToggle.querySelector("span");
+function changeMapType() {
+    const mapSelector = document.getElementById("map-selector");
+    const selectedType = mapSelector.value;
 
-    if (isSatelliteMode) {
-        // Switch to street map
-        map.removeLayer(satelliteMap);
-        map.addLayer(streetMap);
-        isSatelliteMode = false;
-        satelliteToggle.classList.remove("active");
-        iconSpan.textContent = "🗺️";
-        satelliteToggle.title = "Switch to Satellite View";
-    } else {
-        // Switch to satellite map
-        map.removeLayer(streetMap);
-        map.addLayer(satelliteMap);
-        isSatelliteMode = true;
-        satelliteToggle.classList.add("active");
-        iconSpan.textContent = "🛰️";
-        satelliteToggle.title = "Switch to Street View";
+    // Remove current base layer
+    map.removeLayer(currentBaseLayer);
+
+    // Add selected layer
+    switch (selectedType) {
+        case "street":
+            currentBaseLayer = streetMap;
+            currentMapType = "street";
+            break;
+        case "satellite":
+            currentBaseLayer = satelliteMap;
+            currentMapType = "satellite";
+            break;
+        case "dark":
+            currentBaseLayer = darkMap;
+            currentMapType = "dark";
+            break;
+        case "light":
+            currentBaseLayer = lightMap;
+            currentMapType = "light";
+            break;
+        case "terrain":
+            currentBaseLayer = terrainMap;
+            currentMapType = "terrain";
+            break;
+        default:
+            currentBaseLayer = streetMap;
+            currentMapType = "street";
     }
+
+    map.addLayer(currentBaseLayer);
 }
 
 function toggleLocation() {

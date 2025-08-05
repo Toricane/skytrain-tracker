@@ -253,6 +253,7 @@ body {
     right: 1rem;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 0.5rem;
     z-index: var(--z-controls);
 }
@@ -281,6 +282,39 @@ body {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+}
+
+/* Map Type Selector */
+.map-selector {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+    width: 130px;
+    box-shadow: var(--shadow-medium);
+    transition: var(--transition);
+    font-family: var(--font-family);
+    text-align: left;
+}
+
+.map-selector:hover {
+    background: var(--bg-secondary);
+    border-color: var(--primary-color);
+}
+
+.map-selector:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    border-color: var(--primary-color);
+}
+
+.map-selector option {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 4px 8px;
 }
 
 /* ===== LEGEND ===== */
@@ -673,6 +707,12 @@ body {
         width: 40px;
         height: 40px;
         font-size: 1.1rem;
+    }
+
+    .map-selector {
+        width: 110px;
+        font-size: 12px;
+        padding: 6px 8px;
     }
 
     .legend {
