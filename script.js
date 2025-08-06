@@ -57,13 +57,16 @@ let routeLayer = null;
 let routeLayerGroup = null;
 
 const stationMarkers = {};
+const vehicleMarkers = {}; // To hold moving vehicle markers
 const stationData = {}; // To hold all station and platform info
 let trainJourneys = {}; // To hold all train journey data
 let trainStates = {}; // To hold the current state of each train
+let vehicleStates = {}; // To hold the current state of moving vehicles
 let stationTrainCount = {}; // To count how many trains are at each station
 let stationSchedules = {}; // To hold schedule for each station
 let openPopupInfo = null; // To track the currently open popup
 let locationMarker = null; // To keep track of the user's location marker
+let routeCoordinates = {}; // To hold route coordinate data for vehicle movement
 
 const lineColors = {
     // SkyTrain lines
@@ -210,15 +213,21 @@ function toggleRoutes() {
             map.removeLayer(routeLayerGroup);
             routesVisible = false;
         } else {
-            // Remove and re-add all station markers to ensure they stay on top
-            const allMarkers = Object.values(stationMarkers);
-            allMarkers.forEach((marker) => map.removeLayer(marker));
+            // Remove and re-add all station markers and vehicle markers to ensure they stay on top
+            const allStationMarkers = Object.values(stationMarkers);
+            const allVehicleMarkers = Object.values(vehicleMarkers);
+
+            allStationMarkers.forEach((marker) => map.removeLayer(marker));
+            allVehicleMarkers.forEach((marker) => map.removeLayer(marker));
 
             // Add routes back
             map.addLayer(routeLayerGroup);
 
-            // Re-add all station markers on top
-            allMarkers.forEach((marker) => map.addLayer(marker));
+            // Re-add all station markers first
+            allStationMarkers.forEach((marker) => map.addLayer(marker));
+
+            // Re-add all vehicle markers on top
+            allVehicleMarkers.forEach((marker) => map.addLayer(marker));
 
             routesVisible = true;
         }
@@ -393,6 +402,28 @@ async function loadRoutes() {
         const response = await fetch("transit_routes.geojson");
         const routeData = await response.json();
 
+        // Store route coordinates for vehicle movement
+        routeCoordinates = {};
+        routeData.features.forEach((feature) => {
+            const routeName = feature.properties.route_name;
+            if (feature.geometry.type === "LineString") {
+                // Initialize array for this route if it doesn't exist
+                if (!routeCoordinates[routeName]) {
+                    routeCoordinates[routeName] = [];
+                }
+
+                // Add this segment to the route
+                const coordinates = feature.geometry.coordinates.map(
+                    (coord) => ({
+                        lon: coord[0],
+                        lat: coord[1],
+                    })
+                );
+
+                routeCoordinates[routeName].push(coordinates);
+            }
+        });
+
         // Remove existing route layer if it exists
         if (routeLayer) {
             map.removeLayer(routeLayer);
@@ -425,6 +456,16 @@ async function loadRoutes() {
         routeLayerGroup.addTo(map);
 
         console.log("Transit routes loaded and displayed.");
+
+        // Debug: log route information
+        Object.keys(routeCoordinates).forEach((routeName) => {
+            console.log(
+                `Route ${routeName}: ${routeCoordinates[routeName].length} segments`
+            );
+            routeCoordinates[routeName].forEach((segment, index) => {
+                console.log(`  Segment ${index}: ${segment.length} points`);
+            });
+        });
     } catch (error) {
         console.error("Error loading route data:", error);
         throw error;
@@ -684,8 +725,14 @@ function updateMarkerSizes(zoom) {
         radius = 3; // Very small when far out
     }
 
+    // Update station markers
     Object.values(stationMarkers).forEach((marker) => {
         marker.setRadius(radius);
+    });
+
+    // Update vehicle markers (slightly larger than station markers)
+    Object.values(vehicleMarkers).forEach((marker) => {
+        marker.setRadius(radius + 2);
     });
 }
 
@@ -718,6 +765,20 @@ async function loadJourneys() {
                 lastStation: null,
                 nextStopIndex: 0,
             };
+
+            // Initialize vehicle state for moving vehicles
+            vehicleStates[tripId] = {
+                currentStopIndex: -1,
+                nextStopIndex: 0,
+                isMoving: false,
+                startTime: null,
+                travelDuration: 0,
+                fromCoords: null,
+                toCoords: null,
+                stopDuration: 0,
+                stopStartTime: null,
+                routeSegment: [],
+            };
         });
 
         console.log("Train journeys loaded and initialized.");
@@ -727,6 +788,571 @@ async function loadJourneys() {
 }
 
 // --- Train Tracking Logic ---
+
+// Utility function to find closest route coordinates to a station
+function findClosestRoutePoint(stationLat, stationLon, routeName) {
+    if (!routeCoordinates[routeName]) {
+        // Try to find a matching route with similar name
+        const alternativeRoute = Object.keys(routeCoordinates).find(
+            (name) =>
+                name.toLowerCase().includes(routeName.toLowerCase()) ||
+                routeName.toLowerCase().includes(name.toLowerCase())
+        );
+        if (alternativeRoute) {
+            routeName = alternativeRoute;
+        } else {
+            return null;
+        }
+    }
+
+    let closest = null;
+    let minDistance = Infinity;
+    let closestIndex = -1;
+    let closestSegmentIndex = -1;
+
+    // Check all segments for this route
+    routeCoordinates[routeName].forEach((segment, segmentIndex) => {
+        segment.forEach((coord, index) => {
+            const distance = calculateDistance(
+                stationLat,
+                stationLon,
+                coord.lat,
+                coord.lon
+            );
+            if (distance < minDistance) {
+                minDistance = distance;
+                closest = coord;
+                closestIndex = index;
+                closestSegmentIndex = segmentIndex;
+            }
+        });
+    });
+
+    return {
+        coord: closest,
+        index: closestIndex,
+        segmentIndex: closestSegmentIndex,
+        routeName: routeName,
+    };
+}
+
+// Function to find the best route path between two stations
+function findBestRoutePath(fromLat, fromLon, toLat, toLon, routeName) {
+    if (!routeCoordinates[routeName]) return null;
+
+    let bestPath = null;
+    let shortestDistance = Infinity;
+
+    // Try each segment to find the best path
+    routeCoordinates[routeName].forEach((segment, segmentIndex) => {
+        const fromPoint = findClosestPointInSegment(fromLat, fromLon, segment);
+        const toPoint = findClosestPointInSegment(toLat, toLon, segment);
+
+        if (fromPoint && toPoint) {
+            // Calculate total distance of this potential path
+            const totalDistance =
+                fromPoint.distance +
+                toPoint.distance +
+                Math.abs(toPoint.index - fromPoint.index);
+
+            if (totalDistance < shortestDistance) {
+                shortestDistance = totalDistance;
+
+                // Extract the path between these points
+                const startIndex = Math.min(fromPoint.index, toPoint.index);
+                const endIndex = Math.max(fromPoint.index, toPoint.index);
+                let path = segment.slice(startIndex, endIndex + 1);
+
+                // Reverse if we need to go backwards along the segment
+                if (fromPoint.index > toPoint.index) {
+                    path = path.reverse();
+                }
+
+                bestPath = {
+                    path: path,
+                    segmentIndex: segmentIndex,
+                    isReversed: fromPoint.index > toPoint.index,
+                };
+            }
+        }
+    });
+
+    return bestPath;
+}
+
+// Helper function to find closest point within a specific segment
+function findClosestPointInSegment(lat, lon, segment) {
+    let closestPoint = null;
+    let minDistance = Infinity;
+    let closestIndex = -1;
+
+    segment.forEach((coord, index) => {
+        const distance = calculateDistance(lat, lon, coord.lat, coord.lon);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestPoint = coord;
+            closestIndex = index;
+        }
+    });
+
+    return closestPoint
+        ? { coord: closestPoint, index: closestIndex, distance: minDistance }
+        : null;
+}
+
+// Function to create a smooth path between stations using multiple segments if needed
+function createRoutePath(fromLat, fromLon, toLat, toLon, routeName) {
+    // First try to find a path within a single segment
+    const singleSegmentPath = findBestRoutePath(
+        fromLat,
+        fromLon,
+        toLat,
+        toLon,
+        routeName
+    );
+
+    if (singleSegmentPath && singleSegmentPath.path.length > 1) {
+        return singleSegmentPath.path;
+    }
+
+    // If no good single-segment path found, try to connect segments
+    // For now, we'll use a more sophisticated approach to find connecting paths
+    let bestConnectedPath = findConnectedRoutePath(
+        fromLat,
+        fromLon,
+        toLat,
+        toLon,
+        routeName
+    );
+
+    if (bestConnectedPath && bestConnectedPath.length > 1) {
+        return bestConnectedPath;
+    }
+
+    // Final fallback: direct interpolation with intermediate points for smoothness
+    return createSmoothDirectPath(fromLat, fromLon, toLat, toLon);
+}
+
+// Function to find path connecting multiple segments
+function findConnectedRoutePath(fromLat, fromLon, toLat, toLon, routeName) {
+    if (!routeCoordinates[routeName]) return null;
+
+    const fromPoints = [];
+    const toPoints = [];
+
+    // Find closest points on all segments
+    routeCoordinates[routeName].forEach((segment, segmentIndex) => {
+        const fromPoint = findClosestPointInSegment(fromLat, fromLon, segment);
+        const toPoint = findClosestPointInSegment(toLat, toLon, segment);
+
+        if (fromPoint) {
+            fromPoints.push({ ...fromPoint, segmentIndex });
+        }
+        if (toPoint) {
+            toPoints.push({ ...toPoint, segmentIndex });
+        }
+    });
+
+    // Find the best combination with shortest total distance
+    let bestPath = null;
+    let shortestTotal = Infinity;
+
+    fromPoints.forEach((fromPoint) => {
+        toPoints.forEach((toPoint) => {
+            if (fromPoint.segmentIndex === toPoint.segmentIndex) {
+                // Same segment - create path
+                const segment =
+                    routeCoordinates[routeName][fromPoint.segmentIndex];
+                const startIndex = Math.min(fromPoint.index, toPoint.index);
+                const endIndex = Math.max(fromPoint.index, toPoint.index);
+                let path = segment.slice(startIndex, endIndex + 1);
+
+                if (fromPoint.index > toPoint.index) {
+                    path = path.reverse();
+                }
+
+                const totalDistance = fromPoint.distance + toPoint.distance;
+                if (totalDistance < shortestTotal && path.length > 1) {
+                    shortestTotal = totalDistance;
+                    bestPath = path;
+                }
+            }
+        });
+    });
+
+    return bestPath;
+}
+
+// Function to create smooth direct path with intermediate points
+function createSmoothDirectPath(fromLat, fromLon, toLat, toLon) {
+    const numPoints = 10; // Create 10 intermediate points for smoothness
+    const path = [];
+
+    for (let i = 0; i <= numPoints; i++) {
+        const progress = i / numPoints;
+        const lat = fromLat + (toLat - fromLat) * progress;
+        const lon = fromLon + (toLon - fromLon) * progress;
+        path.push({ lat, lon });
+    }
+
+    return path;
+}
+
+// Improved route segment function that finds the best path between stations
+function getRouteSegmentForJourney(journey, currentStopIndex, nextStopIndex) {
+    if (
+        currentStopIndex < 0 ||
+        nextStopIndex < 0 ||
+        nextStopIndex >= journey.stops.length
+    ) {
+        return [];
+    }
+
+    const currentStop = journey.stops[currentStopIndex];
+    const nextStop = journey.stops[nextStopIndex];
+
+    const currentCoords = findStationCoords(currentStop.stop_name);
+    const nextCoords = findStationCoords(nextStop.stop_name);
+
+    if (!currentCoords || !nextCoords) return [];
+
+    // Use the new path-finding system
+    const routePath = createRoutePath(
+        currentCoords.lat,
+        currentCoords.lon,
+        nextCoords.lat,
+        nextCoords.lon,
+        journey.line
+    );
+
+    return routePath || [];
+}
+
+// Utility function to interpolate position along route segment with linear progress
+function interpolateAlongRoute(routeSegment, progress) {
+    if (routeSegment.length === 0) return null;
+    if (routeSegment.length === 1) return routeSegment[0];
+
+    // Use linear progress for constant speed
+    const totalSegments = routeSegment.length - 1;
+    const segmentProgress = progress * totalSegments;
+    const segmentIndex = Math.floor(segmentProgress);
+    const localProgress = segmentProgress - segmentIndex;
+
+    if (segmentIndex >= totalSegments)
+        return routeSegment[routeSegment.length - 1];
+
+    const start = routeSegment[segmentIndex];
+    const end = routeSegment[segmentIndex + 1];
+
+    return {
+        lat: start.lat + (end.lat - start.lat) * localProgress,
+        lon: start.lon + (end.lon - start.lon) * localProgress,
+    };
+}
+
+// Easing function for smooth acceleration and deceleration
+function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+// Enhanced vehicle state for constant speed animation
+let vehicleAnimations = {}; // To track ongoing animations
+
+// Function to animate vehicle to target position with constant speed
+function animateVehicleToPosition(
+    tripId,
+    currentPos,
+    targetPos,
+    duration = 1000
+) {
+    if (!vehicleMarkers[tripId] || !currentPos || !targetPos) return;
+
+    // Cancel any existing animation for this vehicle
+    if (vehicleAnimations[tripId]) {
+        cancelAnimationFrame(vehicleAnimations[tripId].animationId);
+    }
+
+    const marker = vehicleMarkers[tripId];
+    const startTime = performance.now();
+    const startLat = currentPos.lat;
+    const startLon = currentPos.lon;
+    const deltaLat = targetPos.lat - startLat;
+    const deltaLon = targetPos.lon - startLon;
+
+    function animate(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        const newLat = startLat + deltaLat * progress;
+        const newLon = startLon + deltaLon * progress;
+
+        marker.setLatLng([newLat, newLon]);
+
+        if (progress < 1) {
+            vehicleAnimations[tripId] = {
+                animationId: requestAnimationFrame(animate),
+                startTime: startTime,
+                duration: duration,
+            };
+        } else {
+            // Animation complete
+            delete vehicleAnimations[tripId];
+        }
+    }
+
+    vehicleAnimations[tripId] = {
+        animationId: requestAnimationFrame(animate),
+        startTime: startTime,
+        duration: duration,
+    };
+}
+
+// Function to create a moving vehicle marker
+function createVehicleMarker(tripId, journey, stopName) {
+    if (vehicleMarkers[tripId]) {
+        map.removeLayer(vehicleMarkers[tripId]);
+    }
+
+    // Find the station marker to copy its appearance
+    const stationMarker = stationMarkers[stopName];
+    if (!stationMarker) return null;
+
+    const color = lineColors[journey.line] || "#ff7800";
+    const highlightColor = highlightColors[journey.line] || "#00ff00";
+
+    // Create vehicle marker as a slightly larger, highlighted version of station marker
+    const vehicleMarker = L.circleMarker(stationMarker.getLatLng(), {
+        radius: stationMarker.getRadius() + 2, // Slightly larger
+        fillColor: highlightColor,
+        color: "#fff", // White border for visibility
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.9,
+        zIndexOffset: 1000, // Ensure it's on top
+    }).addTo(map);
+
+    vehicleMarker.bindTooltip(`${journey.line} - Trip ${tripId}`, {
+        permanent: false,
+        direction: "top",
+        offset: [0, -10],
+    });
+
+    vehicleMarkers[tripId] = vehicleMarker;
+    return vehicleMarker;
+}
+
+// Function to get stop duration based on vehicle type
+function getStopDuration(line) {
+    if (line === "SeaBus") {
+        return 180; // 3 minutes for SeaBus
+    } else {
+        return 30; // 30 seconds for trains and buses
+    }
+}
+
+// Function to update vehicle positions and movements
+function updateVehiclePositions() {
+    const now = new Date();
+    const secondsToday =
+        now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+
+    Object.keys(trainJourneys).forEach((tripId) => {
+        const journey = trainJourneys[tripId];
+        const vehicleState = vehicleStates[tripId];
+
+        // Find current and next stops
+        let currentStopIndex = -1;
+        let nextStopIndex = -1;
+
+        for (let i = 0; i < journey.stops.length; i++) {
+            if (journey.stops[i].arrival_time <= secondsToday) {
+                currentStopIndex = i;
+            } else {
+                nextStopIndex = i;
+                break;
+            }
+        }
+
+        // If no current stop found, vehicle hasn't started yet
+        if (currentStopIndex === -1) {
+            if (vehicleMarkers[tripId]) {
+                map.removeLayer(vehicleMarkers[tripId]);
+                delete vehicleMarkers[tripId];
+            }
+            return;
+        }
+
+        const currentStop = journey.stops[currentStopIndex];
+        const nextStop =
+            nextStopIndex >= 0 ? journey.stops[nextStopIndex] : null;
+
+        // Determine if vehicle should be at station or moving
+        const stopDuration = getStopDuration(journey.line);
+        const shouldBeAtStation = nextStop
+            ? secondsToday < currentStop.arrival_time + stopDuration
+            : true;
+
+        if (shouldBeAtStation) {
+            // Vehicle should be at current station
+            if (!vehicleMarkers[tripId]) {
+                createVehicleMarker(tripId, journey, currentStop.stop_name);
+            } else {
+                // Update position to current station
+                const stationMarker = stationMarkers[currentStop.stop_name];
+                if (stationMarker) {
+                    vehicleMarkers[tripId].setLatLng(stationMarker.getLatLng());
+                }
+            }
+            vehicleState.isMoving = false;
+        } else if (nextStop) {
+            // Vehicle should be moving to next station
+            if (!vehicleState.isMoving) {
+                // Start moving
+                vehicleState.isMoving = true;
+                vehicleState.startTime =
+                    currentStop.arrival_time + stopDuration;
+                vehicleState.travelDuration =
+                    nextStop.arrival_time - vehicleState.startTime;
+                vehicleState.currentStopIndex = currentStopIndex;
+                vehicleState.nextStopIndex = nextStopIndex;
+
+                // Get coordinates for movement
+                const currentStationData = findStationCoords(
+                    currentStop.stop_name
+                );
+                const nextStationData = findStationCoords(nextStop.stop_name);
+
+                if (currentStationData && nextStationData) {
+                    vehicleState.fromCoords = currentStationData;
+                    vehicleState.toCoords = nextStationData;
+                    vehicleState.routeSegment = getRouteSegmentForJourney(
+                        journey,
+                        currentStopIndex,
+                        nextStopIndex
+                    );
+
+                    // If no route segment found, fallback to smooth direct interpolation
+                    if (vehicleState.routeSegment.length === 0) {
+                        vehicleState.routeSegment = createSmoothDirectPath(
+                            currentStationData.lat,
+                            currentStationData.lon,
+                            nextStationData.lat,
+                            nextStationData.lon
+                        );
+                    }
+                }
+            }
+
+            // Update moving position with constant speed animation
+            if (vehicleState.isMoving && vehicleState.travelDuration > 0) {
+                const elapsedTime = secondsToday - vehicleState.startTime;
+                const currentProgress = Math.min(
+                    elapsedTime / vehicleState.travelDuration,
+                    1
+                );
+
+                // Calculate where vehicle should be in 1 second
+                const futureElapsedTime = elapsedTime + 1; // 1 second ahead
+                const futureProgress = Math.min(
+                    futureElapsedTime / vehicleState.travelDuration,
+                    1
+                );
+
+                let currentPosition, futurePosition;
+
+                if (vehicleState.routeSegment.length > 0) {
+                    // Use route interpolation
+                    currentPosition = interpolateAlongRoute(
+                        vehicleState.routeSegment,
+                        currentProgress
+                    );
+                    futurePosition = interpolateAlongRoute(
+                        vehicleState.routeSegment,
+                        futureProgress
+                    );
+                } else {
+                    // Fallback to direct interpolation
+                    currentPosition = {
+                        lat:
+                            vehicleState.fromCoords.lat +
+                            (vehicleState.toCoords.lat -
+                                vehicleState.fromCoords.lat) *
+                                currentProgress,
+                        lon:
+                            vehicleState.fromCoords.lon +
+                            (vehicleState.toCoords.lon -
+                                vehicleState.fromCoords.lon) *
+                                currentProgress,
+                    };
+                    futurePosition = {
+                        lat:
+                            vehicleState.fromCoords.lat +
+                            (vehicleState.toCoords.lat -
+                                vehicleState.fromCoords.lat) *
+                                futureProgress,
+                        lon:
+                            vehicleState.fromCoords.lon +
+                            (vehicleState.toCoords.lon -
+                                vehicleState.fromCoords.lon) *
+                                futureProgress,
+                    };
+                }
+
+                if (!vehicleMarkers[tripId]) {
+                    createVehicleMarker(tripId, journey, currentStop.stop_name);
+                }
+
+                if (
+                    vehicleMarkers[tripId] &&
+                    currentPosition &&
+                    futurePosition
+                ) {
+                    // Get current marker position
+                    const markerLatLng = vehicleMarkers[tripId].getLatLng();
+                    const markerPosition = {
+                        lat: markerLatLng.lat,
+                        lon: markerLatLng.lng,
+                    };
+
+                    // Calculate distance to see if we should animate
+                    const distanceToTarget = calculateDistance(
+                        markerPosition.lat,
+                        markerPosition.lon,
+                        futurePosition.lat,
+                        futurePosition.lon
+                    );
+
+                    // Only animate if there's significant movement (>0.5 meters)
+                    if (distanceToTarget > 0.5) {
+                        // Animate to future position over 1 second with constant speed
+                        animateVehicleToPosition(
+                            tripId,
+                            markerPosition,
+                            futurePosition,
+                            1000
+                        );
+                    }
+                }
+            }
+        } else {
+            // Vehicle has completed its journey
+            if (vehicleMarkers[tripId]) {
+                map.removeLayer(vehicleMarkers[tripId]);
+                delete vehicleMarkers[tripId];
+            }
+        }
+    });
+}
+
+// Helper function to find station coordinates
+function findStationCoords(stopName) {
+    const marker = stationMarkers[stopName];
+    if (!marker) return null;
+
+    const latlng = marker.getLatLng();
+    return { lat: latlng.lat, lon: latlng.lng };
+}
 
 function updateTrainPositions() {
     const now = new Date();
@@ -739,6 +1365,11 @@ function updateTrainPositions() {
         openPopupInfo.marker.setPopupContent(newContent);
     }
 
+    // Update vehicle positions (moving vehicles)
+    updateVehiclePositions();
+
+    // Keep the old station highlighting logic for backward compatibility if needed
+    // This is now mainly used for station visit counting, not highlighting
     Object.keys(trainJourneys).forEach((tripId) => {
         const journey = trainJourneys[tripId];
         let state = trainStates[tripId];
@@ -759,24 +1390,13 @@ function updateTrainPositions() {
             const oldStation = state.lastStation;
 
             if (newStation !== oldStation) {
-                // Decrement count at old station and revert color if no trains left
+                // Update train count tracking (but don't highlight stations anymore)
                 if (oldStation && stationMarkers[oldStation]) {
                     stationTrainCount[oldStation]--;
-                    if (stationTrainCount[oldStation] === 0) {
-                        const oldMarker = stationMarkers[oldStation];
-                        oldMarker.setStyle({
-                            fillColor: oldMarker.options.originalColor,
-                        });
-                    }
                 }
 
-                // Increment count at new station and highlight it
                 if (stationMarkers[newStation]) {
                     stationTrainCount[newStation]++;
-                    const newMarker = stationMarkers[newStation];
-                    const highlightColor =
-                        highlightColors[journey.line] || "#00ff00"; // Default to green
-                    newMarker.setStyle({ fillColor: highlightColor });
                 }
 
                 state.lastStation = newStation;
@@ -786,8 +1406,9 @@ function updateTrainPositions() {
 }
 
 function startTrainTracker() {
-    setInterval(updateTrainPositions, 1000);
-    console.log("Train tracker started.");
+    // Update every 200ms for smooth movement instead of 1000ms
+    setInterval(updateTrainPositions, 200);
+    console.log("Train tracker started with smooth updates.");
 }
 
 // --- Popup Content Generation ---
