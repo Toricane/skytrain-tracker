@@ -1,2 +1,2 @@
 feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date,feed_version
-TransLink,https://www.translink.ca,en,20250901,20260104,25SEP_20250905
+TransLink,https://www.translink.ca,en,20250901,20260104,25SEP_20250912

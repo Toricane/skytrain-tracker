@@ -29,7 +29,7 @@ Commercial-Broadway Station @ Bay 5,49.262416,-123.06875,99 B-Line
 Westbound E Broadway @ Clark Dr,49.262499,-123.078554,99 B-Line
 Westbound E Broadway @ Fraser St,49.262593,-123.09009,99 B-Line
 Westbound E Broadway @ Scotia St,49.262926,-123.098697,99 B-Line
-Westbound E Broadway @ Quebec,49.263084,-123.104155,99 B-Line
+Westbound E Broadway @ Quebec St,49.263084,-123.104155,99 B-Line
 Broadway-City Hall Station @ Bay 4,49.263351,-123.11645,99 B-Line
 Westbound W Broadway @ Willow St,49.263433,-123.122318,99 B-Line
 Westbound W Broadway @ Granville St,49.263732,-123.140158,99 B-Line
@@ -89,23 +89,27 @@ Brentwood Town Centre Station @ Platform 2,49.266352,-123.001813,Millennium Line
 Holdom Station @ Platform 2,49.264705,-122.982158,Millennium Line
 Sperling-Burnaby Lake Station @ Platform 2,49.259154,-122.963991,Millennium Line
 Lake City Way Station @ Platform 2,49.254609,-122.939183,Millennium Line
-Lafarge Lake-Douglas Station @ Platform 1,49.285743,-122.791623,Millennium Line
+Lougheed Town Centre Station @ Platform 3,49.248611,-122.896818,Millennium Line
+Commercial-Broadway Station @ Platform 1,49.26298,-123.068426,Millennium Line
+VCC-Clark Station @ Platform 1,49.265873,-123.079049,Millennium Line
+Production Way-University Station @ Platform 1,49.253465,-122.918191,Millennium Line
+Lake City Way Station @ Platform 1,49.254654,-122.939183,Millennium Line
 Sperling-Burnaby Lake Station @ Platform 1,49.259213,-122.963982,Millennium Line
 Holdom Station @ Platform 1,49.264753,-122.982149,Millennium Line
 Brentwood Town Centre Station @ Platform 1,49.266431,-123.001813,Millennium Line
 Gilmore Station @ Platform 1,49.265002,-123.013571,Millennium Line
 Rupert Station @ Platform 1,49.260815,-123.032869,Millennium Line
 Renfrew Station @ Platform 1,49.258942,-123.045374,Millennium Line
-Commercial-Broadway Station @ Platform 1,49.26298,-123.068426,Millennium Line
-VCC-Clark Station @ Platform 1,49.265873,-123.079049,Millennium Line
+Lafarge Lake-Douglas Station @ Platform 1,49.285743,-122.791623,Millennium Line
 Lincoln Station @ Platform 1,49.280417,-122.794097,Millennium Line
 Coquitlam Central Station @ Platform 1,49.274919,-122.800551,Millennium Line
 Inlet Centre Station @ Platform 1,49.277294,-122.828164,Millennium Line
 Moody Centre Station @ Platform 1,49.27798,-122.845609,Millennium Line
 Burquitlam Station @ Platform 1,49.261421,-122.889853,Millennium Line
-Lougheed Town Centre Station @ Platform 3,49.248611,-122.896818,Millennium Line
-Production Way-University Station @ Platform 1,49.253465,-122.918191,Millennium Line
-Lake City Way Station @ Platform 1,49.254654,-122.939183,Millennium Line
+Waterfront Station @ Platform 2,49.285907,-123.111578,Expo Line
+Patterson Station @ Platform 2,49.229712,-123.012678,Expo Line
+Metrotown Station @ Platform 2,49.225781,-123.00394,Expo Line
+Royal Oak Station @ Platform 2,49.220013,-122.988475,Expo Line
 Edmonds Station @ Platform 2,49.211909,-122.959156,Expo Line
 22nd Street Station @ Platform 2,49.200021,-122.94894,Expo Line
 New Westminster Station @ Platform 2,49.201406,-122.912573,Expo Line
@@ -113,16 +117,8 @@ Columbia Station @ Platform 2,49.204778,-122.906118,Expo Line
 Scott Road Station @ Platform 2,49.204383,-122.874171,Expo Line
 Gateway Station @ Platform 2,49.198946,-122.850673,Expo Line
 Surrey Central Station @ Platform 2,49.189549,-122.847914,Expo Line
-King George Station @ Platform 2,49.182755,-122.844744,Expo Line
-Sapperton Station @ Platform 2,49.224621,-122.889311,Expo Line
-Braid Station @ Platform 2,49.233236,-122.882718,Expo Line
-Lougheed Town Centre Station @ Platform 2,49.248549,-122.896879,Expo Line
-Production Way-University Station @ Platform 1,49.253465,-122.918191,Expo Line
-Waterfront Station @ Platform 2,49.285907,-123.111578,Expo Line
-Patterson Station @ Platform 2,49.229712,-123.012678,Expo Line
-Metrotown Station @ Platform 2,49.225781,-123.00394,Expo Line
-Royal Oak Station @ Platform 2,49.220013,-122.988475,Expo Line
 Burrard Station @ Platform 2,49.285634,-123.119515,Expo Line
+King George Station @ Platform 2,49.182755,-122.844744,Expo Line
 Granville Station @ Platform 2,49.283136,-123.115744,Expo Line
 Stadium-Chinatown Station @ Platform 2,49.279178,-123.109213,Expo Line
 Main Street-Science World Station @ Platform 2,49.273099,-123.100399,Expo Line
@@ -130,26 +126,30 @@ Commercial-Broadway Station @ Platform 4,49.262317,-123.069179,Expo Line
 Nanaimo Station @ Platform 2,49.248283,-123.055904,Expo Line
 29th Avenue Station @ Platform 2,49.244236,-123.046136,Expo Line
 Joyce-Collingwood Station @ Platform 2,49.238353,-123.031827,Expo Line
-Edmonds Station @ Platform 1,49.211945,-122.95904,Expo Line
-Stadium-Chinatown Station @ Platform 1,49.279271,-123.109109,Expo Line
-Granville Station @ Platform 1,49.283193,-123.115674,Expo Line
+Sapperton Station @ Platform 2,49.224621,-122.889311,Expo Line
+Braid Station @ Platform 2,49.233236,-122.882718,Expo Line
+Lougheed Town Centre Station @ Platform 2,49.248549,-122.896879,Expo Line
+Production Way-University Station @ Platform 1,49.253465,-122.918191,Expo Line
 Burrard Station @ Platform 1,49.28558,-123.119598,Expo Line
 Waterfront Station @ Platform 1,49.285962,-123.111516,Expo Line
+Granville Station @ Platform 1,49.283193,-123.115674,Expo Line
+Main Street-Science World Station @ Platform 1,49.273172,-123.10035,Expo Line
+Stadium-Chinatown Station @ Platform 1,49.279271,-123.109109,Expo Line
+Commercial-Broadway Station @ Platform 3,49.262311,-123.069077,Expo Line
+Edmonds Station @ Platform 1,49.211945,-122.95904,Expo Line
 Royal Oak Station @ Platform 1,49.22011,-122.98844,Expo Line
 Metrotown Station @ Platform 1,49.225852,-123.003876,Expo Line
 Patterson Station @ Platform 1,49.229798,-123.012613,Expo Line
 Joyce-Collingwood Station @ Platform 1,49.23843,-123.031759,Expo Line
 29th Avenue Station @ Platform 1,49.24431,-123.04608,Expo Line
 Nanaimo Station @ Platform 1,49.248334,-123.055868,Expo Line
-Commercial-Broadway Station @ Platform 3,49.262311,-123.069077,Expo Line
-Main Street-Science World Station @ Platform 1,49.273172,-123.10035,Expo Line
+Surrey Central Station @ Platform 1,49.189561,-122.847796,Expo Line
+Gateway Station @ Platform 1,49.198955,-122.850542,Expo Line
 Scott Road Station @ Platform 1,49.204448,-122.874185,Expo Line
 Columbia Station @ Platform 1,49.204859,-122.906187,Expo Line
 New Westminster Station @ Platform 1,49.201459,-122.912629,Expo Line
 22nd Street Station @ Platform 1,49.200083,-122.948971,Expo Line
 King George Station @ Platform 1,49.182812,-122.844691,Expo Line
-Surrey Central Station @ Platform 1,49.189561,-122.847796,Expo Line
-Gateway Station @ Platform 1,49.198955,-122.850542,Expo Line
 Production Way-University Station @ Platform 2,49.253364,-122.918218,Expo Line
 Lougheed Town Centre Station @ Platform 1,49.248484,-122.896952,Expo Line
 Braid Station @ Platform 1,49.233236,-122.882831,Expo Line
@@ -162,7 +162,6 @@ Newton Exchange @ Bay 3,49.133297,-122.842298,R1 King George Blvd
 Eastbound 104 Ave @ 144 St,49.191438,-122.822383,R1 King George Blvd
 Eastbound 104 Ave @ 148 St,49.191406,-122.81188,R1 King George Blvd
 Guildford Exchange @ Bay 3,49.191357,-122.804448,R1 King George Blvd
-Guildford @ Layover,49.194098,-122.805781,R1 King George Blvd
 Northbound King George Blvd @ 76 Ave,49.14148,-122.845465,R1 King George Blvd
 Northbound King George Blvd @ 80 Ave,49.147573,-122.845487,R1 King George Blvd
 Northbound King George Blvd @ 88 Ave,49.163422,-122.845609,R1 King George Blvd
@@ -171,6 +170,7 @@ King George Station @ Bay 4,49.182677,-122.845166,R1 King George Blvd
 Surrey Central Station @ Bay 13,49.189684,-122.847558,R1 King George Blvd
 Eastbound 104 Ave @ Whalley Blvd,49.191475,-122.84108,R1 King George Blvd
 Eastbound 104 Ave @ 140 St,49.191383,-122.833623,R1 King George Blvd
+Guildford @ Layover,49.194098,-122.805781,R1 King George Blvd
 Southbound King George Blvd @ 88 Ave,49.161766,-122.84599,R1 King George Blvd
 Southbound King George Blvd @ 80 Ave,49.147239,-122.845901,R1 King George Blvd
 Southbound King George Blvd @ 76 Ave,49.140079,-122.845817,R1 King George Blvd
@@ -271,6 +271,7 @@ Eastbound E Hastings St @ Renfrew St,49.281012,-123.043299,R5 Hastings St
 Kootenay Loop @ Bay 8,49.281026,-123.024952,R5 Hastings St
 Eastbound Hastings St @ Gilmore Ave,49.280953,-123.013446,R5 Hastings St
 Northbound Boundary Rd @ Kitchener St,49.272518,-123.02333,R5 Hastings St
+Waterfront Station @ Bay 1,49.285809,-123.112392,R5 Hastings St
 Westbound E Hastings St @ Renfrew St,49.281229,-123.044631,R5 Hastings St
 Westbound E Hastings St @ Nanaimo St,49.281242,-123.057254,R5 Hastings St
 Westbound E Hastings St @ Commercial Dr,49.281362,-123.071174,R5 Hastings St
@@ -285,6 +286,7 @@ Westbound Hastings St @ Hythe Ave,49.28024,-122.991013,R5 Hastings St
 Westbound Hastings St @ Willingdon Ave-,49.281121,-123.003852,R5 Hastings St
 Westbound Hastings St @ Gilmore Ave,49.281146,-123.013374,R5 Hastings St
 Kootenay Loop @ Bay 7,49.281204,-123.025393,R5 Hastings St
+Northbound Seymour St @ W Hastings St,49.28481,-123.112535,R5 Hastings St
 Newton Exchange @ Bay 8,49.133438,-122.841548,R6 Scott Rd
 Northbound Scott Rd @ 92 Ave,49.171188,-122.890096,R6 Scott Rd
 Northbound Scott Rd @ 96 Ave,49.177579,-122.889969,R6 Scott Rd
